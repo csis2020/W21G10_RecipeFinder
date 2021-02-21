@@ -6,7 +6,7 @@ import java.util.List;
 
 
 // recipe adapter to get and set information from database to view
-public class RecipeAdapter {
+public class Recipe {
     String recipeTitle; // recipe title
     Image recipeImage; // recipe image
     List<String> ingredientsList; // list of ingredients for recipe
@@ -14,7 +14,7 @@ public class RecipeAdapter {
 
     // constructor with just recipeTitle as parameter
     // recipeImage, ingredientsList and directions should be retrieved from database
-    public RecipeAdapter(String recipeTitle) {
+    public Recipe(String recipeTitle) {
         this.recipeTitle = recipeTitle;
     }
 
