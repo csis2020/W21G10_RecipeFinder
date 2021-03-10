@@ -25,8 +25,8 @@ public class RecipeDisplay extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_display);
 
         // declare all views for use
-        TextView txtViewRecipeTitle = findViewById(R.id.txtViewRecipeTitle);
-        ImageView imgViewRecipeImg = findViewById(R.id.imgViewRecipeImg);
+        TextView txtViewTitleDisplay = findViewById(R.id.txtViewTitleDisplay);
+        ImageView imgViewDisplay = findViewById(R.id.imgViewDisplay);
         TextView txtViewIngredients = findViewById(R.id.txtViewIngredients);
         TextView txtViewDirections = findViewById(R.id.txtViewDirections);
 
@@ -39,8 +39,8 @@ public class RecipeDisplay extends AppCompatActivity {
             String directions = bundle.getString("DIRECTIONS");
 
             // set view using information obtained from bundle
-            txtViewRecipeTitle.setText(title);
-            imgViewRecipeImg.setImageResource(recipeImagesList.get(imgId));
+            txtViewTitleDisplay.setText(title);
+            imgViewDisplay.setImageResource(recipeImagesList.get(imgId));
             txtViewIngredients.setText(ingredients);
             txtViewDirections.setText(directions);
         } catch (Exception ex) {
@@ -48,5 +48,41 @@ public class RecipeDisplay extends AppCompatActivity {
             Log.d("ERR", "Error loading recipe for " + title);
             Toast.makeText(this, "Error loading recipe for " + title, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public String convertIngredList(String str) {
+        String output = "";
+
+        String[] list = str.split(";");
+
+        for (int i = 0; i < list.length; i++) {
+            output += " - ";
+            for (int k = 0; k < list[i].length(); k++) {
+                if (list[i].charAt(k) != '$') {
+                    output += list[i].charAt(k);
+                } else {
+                    output += ",";
+                }
+            }
+            output += "\n";
+        }
+
+        return output;
+    }
+
+    private String convertDirList(String dir) {
+        String output = "";
+
+        for (int i = 0; i < dir.length(); i++){
+            if (dir.charAt(i) == '$') {
+                output += "\n\n";
+            } else if (dir.charAt(i) == ';') {
+                output += ",";
+            } else {
+                output += dir.charAt(i);
+            }
+        }
+
+        return output;
     }
 }

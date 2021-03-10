@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Recipe Finder</string>
+    <string name="txtViewTitle">Recipes</string>
+    <string name="txtViewIngred">Ingredients:</string>
+    <string name="txtViewDir">Directions:</string>
 </resources>
