@@ -41,6 +41,16 @@
 
     </TableRow>
 
+    <TextView
+        android:id="@+id/txtViewCheckBoxListResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/txtNoResult"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TitleNServeSizeTable" />
+
     <ListView
         android:id="@+id/listViewResultList"
         android:layout_width="0dp"
@@ -53,5 +63,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TitleNServeSizeTable" />
+        app:layout_constraintTop_toBottomOf="@+id/txtViewCheckBoxListResult" />
 </androidx.constraintlayout.widget.ConstraintLayout>

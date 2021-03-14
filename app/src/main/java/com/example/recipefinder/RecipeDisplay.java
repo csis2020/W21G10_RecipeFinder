@@ -23,7 +23,7 @@ public class RecipeDisplay extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_display);
-
+        /*
         try {
             TextView txtViewIngredients = findViewById(R.id.txtViewIngredients);
             Bundle bundle = getIntent().getExtras();
@@ -40,31 +40,32 @@ public class RecipeDisplay extends AppCompatActivity {
         } catch (Exception ex) {
             Log.d("ERR", "Error loading bundle");
         }
+        */
+        // declare all views for use
+        TextView txtViewTitleDisplay = findViewById(R.id.txtViewTitleDisplay);
+        ImageView imgViewDisplay = findViewById(R.id.imgViewDisplay);
+        TextView txtViewIngredients = findViewById(R.id.txtViewIngredients);
+        TextView txtViewDirections = findViewById(R.id.txtViewDirections);
 
-//        // declare all views for use
-//        TextView txtViewTitleDisplay = findViewById(R.id.txtViewTitleDisplay);
-//        ImageView imgViewDisplay = findViewById(R.id.imgViewDisplay);
-//        TextView txtViewIngredients = findViewById(R.id.txtViewIngredients);
-//        TextView txtViewDirections = findViewById(R.id.txtViewDirections);
-//
-//        try {
-//            // declare bundle from intent and get information from bundle
-//            Bundle bundle = getIntent().getExtras();
-//            String title = bundle.getString("TITLE");
-//            int imgId = bundle.getInt("IMG");
-//            String ingredients = bundle.getString("INGREDS");
-//            String directions = bundle.getString("DIRECTIONS");
-//
-//            // set view using information obtained from bundle
-//            txtViewTitleDisplay.setText(title);
-//            imgViewDisplay.setImageResource(recipeImagesList.get(imgId));
-//            txtViewIngredients.setText(ingredients);
-//            txtViewDirections.setText(directions);
-//        } catch (Exception ex) {
-//            String title = getIntent().getExtras().getString("TITLE");
-//            Log.d("ERR", "Error loading recipe for " + title);
-//            Toast.makeText(this, "Error loading recipe for " + title, Toast.LENGTH_SHORT).show();
-//        }
+        try {
+            // declare bundle from intent and get information from bundle
+            Bundle bundle = getIntent().getExtras();
+            String title = bundle.getString("TITLE");
+            int imgId = bundle.getInt("IMG");
+            String ingredients = bundle.getString("INGREDS");
+            String directions = bundle.getString("DIRECTIONS");
+
+            // set view using information obtained from bundle
+            txtViewTitleDisplay.setText(title);
+            //imgViewDisplay.setImageResource(recipeImagesList.get(imgId));
+            imgViewDisplay.setImageResource(imgId); //for test by Hye Kyung Ko
+            txtViewIngredients.setText(ingredients);
+            txtViewDirections.setText(directions);
+        } catch (Exception ex) {
+            String title = getIntent().getExtras().getString("TITLE");
+            Log.d("ERR", "Error loading recipe for " + title);
+            Toast.makeText(this, "Error loading recipe for " + title, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public String convertIngredList(String str) {

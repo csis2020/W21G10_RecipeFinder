@@ -12,4 +12,5 @@
     <string name="txtRestListTitle">Recipes</string>
     <string name="editTxtServingSize">Serving Size (deafult: 1)</string>
     <string name="txtRecipeResultTxt" >recipe name</string>
+    <string name="txtNoResult" />
 </resources>

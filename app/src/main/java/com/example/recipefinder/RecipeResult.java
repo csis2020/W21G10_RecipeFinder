@@ -5,10 +5,14 @@ import java.util.List;
 public class RecipeResult {
     String recipeName;
     int recipeImgID;
+    String ingredient;
+    String direction;
 
-    public RecipeResult(String recipeName, int recipeImgID) {
+    public RecipeResult(String recipeName, int recipeImgID, String ingredient, String direction) {
         this.recipeName = recipeName;
         this.recipeImgID = recipeImgID;
+        this.ingredient = ingredient;
+        this.direction = direction;
     }
 
     public String getRecipeName() {
@@ -25,5 +29,21 @@ public class RecipeResult {
 
     public void setRecipeImgID(int recipeImgID) {
         this.recipeImgID = recipeImgID;
+    }
+
+    public String getIngredient() {
+        return ingredient;
+    }
+
+    public void setIngredient(String ingredient) {
+        this.ingredient = ingredient;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 }

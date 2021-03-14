@@ -2,10 +2,15 @@ package com.example.recipefinder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -42,19 +47,43 @@ public class RecipeResultListActivity extends AppCompatActivity {
             readCSVStudents(); //Temp code
 
             ArrayList<Integer> checkedlist = generateCheckBoxList();
-            createRecipeResultList(checkedlist);
+            TextView txtViewCheckBoxListResult = findViewById(R.id.txtViewCheckBoxListResult);
 
+            if(checkedlist.size() == 0){
+                txtViewCheckBoxListResult.setText("There is no matched result. Try again.");
+                Toast.makeText(this, "Sorry!! No result is founded.", Toast.LENGTH_SHORT).show();
+            } else {
+                txtViewCheckBoxListResult.setText("");
+                createRecipeResultList(checkedlist);
+
+                ListView listViewResultList = findViewById(R.id.listViewResultList);
+                RecipeResultAdapter recipeResultAdapter = new RecipeResultAdapter(recipeResultList);
+
+                listViewResultList.setAdapter(recipeResultAdapter);
+
+
+                listViewResultList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+
+                    Bundle selectBundle = new Bundle();
+                    selectBundle.putString("TITLE", recipeResultList.get(position).recipeName);
+                    selectBundle.putInt("IMG", recipeResultList.get(position).recipeImgID);
+                    selectBundle.putString("INGREDS", recipeResultList.get(position).ingredient);
+                    selectBundle.putString("DIRECTIONS", recipeResultList.get(position).direction);
+
+                    Log.d("[HKKO]", "RecipeResultListActivity_ingredient:"+ recipeResultList.get(position).ingredient);
+                    Log.d("[HKKO]", "RecipeResultListActivity_direction:"+ recipeResultList.get(position).direction);
+
+                    Intent intent = new Intent(RecipeResultListActivity.this, RecipeDisplay.class);
+                    intent.putExtras(selectBundle);
+
+                    startActivity(intent);
+
+
+                });
+            }
         }catch(Exception ex){
             Log.d("[HKKO]","__RecipeResultListActivity_onCreate_"+ex);
         }
-
-        ListView listViewResultList = findViewById(R.id.listViewResultList);
-        RecipeResultAdapter recipeResultAdapter = new RecipeResultAdapter(recipeResultList);
-
-        listViewResultList.setAdapter(recipeResultAdapter);
-
-
-
 
     }
 
@@ -63,8 +92,10 @@ public class RecipeResultListActivity extends AppCompatActivity {
 
         for(int i = 0; i< checkedlist.size(); i++){
             String title = recipeTitlesList.get(checkedlist.get(i) +1);
-            int imgID = recipeImagesList.get(checkedlist.get(i) + 1);
-            RecipeResult recipeResult = new RecipeResult(title, imgID);
+            Integer imgID = recipeImagesList.get(checkedlist.get(i) + 1);
+            String ingredient = recipeIngredientsList.get(checkedlist.get(i) + 1);
+            String direction = recipeDirectionsList.get(checkedlist.get(i) + 1);
+            RecipeResult recipeResult = new RecipeResult(title, imgID, ingredient, direction );
             recipeResultList.add(recipeResult);
         }
 
@@ -75,16 +106,17 @@ public class RecipeResultListActivity extends AppCompatActivity {
         ArrayList<Integer> recipeList = new ArrayList<>();
 
         int numberOfList = (int)(Math.random() * 10) ;
-        Log.d("[HKKO]", "__generateCheckBoxList_numberOfList=" + numberOfList);
+        Log.d("[HKKO]", "__randomNumber Size =" + numberOfList);
         //recipeList[0] = (int)(Math.random() * 34);
-        int randomNum = (int)(Math.random() * 34);
+        int randomNum = (int)(Math.random() * 33);
         recipeList.add(randomNum);
 
         for(int i=1; i < numberOfList; i++){
-            //recipeList[i] = (recipeList[0] + (int)(Math.random()*3)) % 35;
+
             randomNum += (int)(Math.random()*3 + 1);
-            randomNum = randomNum % 35;
+            randomNum = randomNum % 34;
             recipeList.add(randomNum);
+            //Log.d("[HKKO]", "__randomNum["+i+"]=" + randomNum);
         }
 
         return recipeList;
