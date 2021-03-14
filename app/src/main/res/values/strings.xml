@@ -3,4 +3,7 @@
     <string name="txtViewTitle">Recipes</string>
     <string name="txtViewIngred">Ingredients:</string>
     <string name="txtViewDir">Directions:</string>
+    <string name="txtViewMainTitle">Ingredients</string>
+    <string name="editTxtSearchIngredient">Search Ingredients</string>
+    <string name="btnSearchIngredients">Search</string>
 </resources>
