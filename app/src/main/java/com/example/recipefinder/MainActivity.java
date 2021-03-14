@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -37,6 +39,21 @@ public class MainActivity extends AppCompatActivity {
         IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(ingredientsList);
         gridViewIngredients.setAdapter(ingredientsAdapter);
 
+        // instantiate edit text and button for ingredient search
+        EditText editTxtSearchIngredient = findViewById(R.id.editTxtSearchIngredient);
+        Button btnSearchIngredients = findViewById(R.id.btnSearchIngredients);
+
+        // setonclicklistener for search ingredients to check corresponding checkbox
+        btnSearchIngredients.setOnClickListener((View view) -> {
+            String searchIngred = editTxtSearchIngredient.getText().toString();
+            if (ingredientsList.contains(searchIngred)) {
+                int index = ingredientsList.indexOf(searchIngred);
+                CheckBox search = findViewById(index);
+                search.setChecked(true);
+            } else {
+                Toast.makeText(this, searchIngred + " not found", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // method to read ingredients csv

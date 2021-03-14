@@ -34,6 +34,7 @@ public class IngredientsAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         // create check box for each ingredient
         CheckBox chkBoxIng = new CheckBox(viewGroup.getContext());
+        chkBoxIng.setId(i); // set id for search ingredients button
         chkBoxIng.setText(ingredientsList.get(i));
         view = chkBoxIng;
 
