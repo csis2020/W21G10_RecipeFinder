@@ -30,6 +30,23 @@ public class RecipeDisplay extends AppCompatActivity {
         TextView txtViewIngredients = findViewById(R.id.txtViewIngredients);
         TextView txtViewDirections = findViewById(R.id.txtViewDirections);
 
+        /*
+        try {
+            TextView txtViewIngredients = findViewById(R.id.txtViewIngredients);
+            Bundle bundle = getIntent().getExtras();
+            ArrayList<String> keys = bundle.getStringArrayList("KEYS");
+            String output = "";
+            for (int i = 0; i < keys.size(); i++) {
+                output += bundle.getString(keys.get(i));
+                output += "\n";
+            }
+
+            txtViewIngredients.setText(output);
+        } catch (Exception ex) {
+            Log.d("ERR", "Error loading bundle");
+        }
+        */
+
         try {
             // declare bundle from intent and get information from bundle
             Bundle bundle = getIntent().getExtras();
