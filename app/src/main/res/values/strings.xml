@@ -3,6 +3,10 @@
     <string name="txtViewTitle">Recipes</string>
     <string name="txtViewIngred">Ingredients:</string>
     <string name="txtViewDir">Directions:</string>
+    <string name="txtViewMainTitle">Ingredients</string>
+    <string name="editTxtSearchIngredient">Search Ingredients</string>
+    <string name="btnSearchIngredients">Search Ingredients</string>
+    <string name="btnSearchRecipes">Search Recipes</string>
     <string name="TxtTitle">"Test Page by Hye Kyung "</string>
     <string name="BtnTestTxt">Test</string>
     <string name="txtRestListTitle">Recipes</string>
