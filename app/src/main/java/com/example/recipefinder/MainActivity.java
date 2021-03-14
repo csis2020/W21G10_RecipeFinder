@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,28 +21,25 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    // lists for recipe titles, images, ingredients and directions
-    // images list as int for resource id
-    // ingredients and directions lists as array of arrays for each recipe
-    List<String> recipeTitlesList = new ArrayList<>(Arrays.asList());
-    List<Integer> recipeImagesList = new ArrayList<>(Arrays.asList());
-    List<ArrayList<String>> recipeIngredientsList = new ArrayList<ArrayList<String>>(Arrays.asList());
-    List<ArrayList<String>> recipeDirectionsList = new ArrayList<ArrayList<String>>(Arrays.asList());
+    // list for ingredients from csv to adapter
     List<String> ingredientsList = new ArrayList<>(Arrays.asList());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Test to push from Hye Kyung Ko local repo
 
+        // call method to read ingredients csv into ingredientsList
         ingredientsList = ReadIngredients();
-        GridView gridViewIngredients = findViewById(R.id.gridViewIngredients);
 
-        gridViewIngredients.setAdapter(new IngredientsAdapter(ingredientsList));
+        // send ingredients list to grid view adapter to set checkboxes
+        GridView gridViewIngredients = findViewById(R.id.gridViewIngredients);
+        IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(ingredientsList);
+        gridViewIngredients.setAdapter(ingredientsAdapter);
+
     }
 
+    // method to read ingredients csv
     private List<String> ReadIngredients() {
         List<String> ingredList = new ArrayList<>(Arrays.asList());
         InputStream inputStream = getResources().openRawResource(R.raw.ingredients);

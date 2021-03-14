@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import java.util.List;
 
 public class IngredientsAdapter extends BaseAdapter {
+    // ingredients list passed from main activity
     List<String> ingredientsList;
 
     public IngredientsAdapter(List<String> ingredientsList) {
@@ -31,10 +32,9 @@ public class IngredientsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        // create check box for each ingredient
         CheckBox chkBoxIng = new CheckBox(viewGroup.getContext());
-
         chkBoxIng.setText(ingredientsList.get(i));
-
         view = chkBoxIng;
 
         return view;

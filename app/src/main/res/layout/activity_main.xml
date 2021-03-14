@@ -19,8 +19,12 @@
 
     <TableRow
         android:id="@+id/tabRowSearch"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtViewMainTitle">
@@ -29,15 +33,21 @@
             android:id="@+id/editTxtSearchIngredient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.9"
             android:ems="10"
             android:hint="@string/editTxtSearchIngredient"
             android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/btnSearchIngredients"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:includeFontPadding="false"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:text="@string/btnSearchIngredients"
+            android:textSize="10sp"
             app:backgroundTint="@color/teal_200" />
     </TableRow>
 
@@ -47,16 +57,29 @@
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:numColumns="auto_fit"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnSearchRecipes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tabRowSearch">
 
     </GridView>
+
+    <Button
+        android:id="@+id/btnSearchRecipes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/btnSearchRecipes"
+        android:textSize="14sp"
+        app:backgroundTint="@android:color/holo_blue_bright"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gridViewIngredients" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

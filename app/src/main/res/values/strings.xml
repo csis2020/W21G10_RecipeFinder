@@ -5,5 +5,6 @@
     <string name="txtViewDir">Directions:</string>
     <string name="txtViewMainTitle">Ingredients</string>
     <string name="editTxtSearchIngredient">Search Ingredients</string>
-    <string name="btnSearchIngredients">Search</string>
+    <string name="btnSearchIngredients">Search Ingredients</string>
+    <string name="btnSearchRecipes">Search Recipes</string>
 </resources>
