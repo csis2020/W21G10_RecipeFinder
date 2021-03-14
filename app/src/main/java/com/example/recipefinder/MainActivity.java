@@ -23,7 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
     // list for ingredients from csv to adapter
+
     List<String> ingredientsList = new ArrayList<>(Arrays.asList());
 
     @Override
