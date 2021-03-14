@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RecipeFinder">
+        <activity android:name=".RecipeResultListActivity"></activity>
         <activity android:name=".RecipeDisplay"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>

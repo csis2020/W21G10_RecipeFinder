@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             }
 //             NEXT INTENT SHOULD BE RECIPELIST.CLASS -- RecipeDisplay used for now
             ingredientsBundle.putStringArrayList("KEYS", keys);
-            Intent intent = new Intent(this, RecipeDisplay.class);
+            Intent intent = new Intent(this, RecipeResultListActivity.class);
             intent.putExtras(ingredientsBundle);
 
             startActivity(intent);

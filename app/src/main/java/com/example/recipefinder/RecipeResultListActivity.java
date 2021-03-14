@@ -36,7 +36,8 @@ public class RecipeResultListActivity extends AppCompatActivity {
         Log.d("[HKKO]","__RecipeResultListActivity___Start");
         try {
             Bundle bundle = getIntent().getExtras();
-            //ArrayList<Integer> checkedlist = bundle.getIntegerArrayList("CHECKEDLIST");
+            ArrayList<String> checkedIngredlist = bundle.getStringArrayList("KEYS");
+
 
             readCSVStudents(); //Temp code
 
