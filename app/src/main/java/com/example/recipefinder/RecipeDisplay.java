@@ -23,24 +23,7 @@ public class RecipeDisplay extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_display);
-        /*
-        try {
-            TextView txtViewIngredients = findViewById(R.id.txtViewIngredients);
-            Bundle bundle = getIntent().getExtras();
-            ArrayList<String> keys = bundle.getStringArrayList("KEYS");
-            String output = "";
 
-            for (int i = 0; i < keys.size(); i++) {
-                output += bundle.getString(keys.get(i));
-                output += "\n";
-            }
-
-            txtViewIngredients.setText(output);
-
-        } catch (Exception ex) {
-            Log.d("ERR", "Error loading bundle");
-        }
-        */
         // declare all views for use
         TextView txtViewTitleDisplay = findViewById(R.id.txtViewTitleDisplay);
         ImageView imgViewDisplay = findViewById(R.id.imgViewDisplay);
@@ -59,8 +42,10 @@ public class RecipeDisplay extends AppCompatActivity {
             txtViewTitleDisplay.setText(title);
             //imgViewDisplay.setImageResource(recipeImagesList.get(imgId));
             imgViewDisplay.setImageResource(imgId); //for test by Hye Kyung Ko
-            txtViewIngredients.setText(ingredients);
-            txtViewDirections.setText(directions);
+            String fmtingd = convertIngredList(ingredients);
+            txtViewIngredients.setText(fmtingd);
+            String fmtdir = convertDirList(directions);
+            txtViewDirections.setText(fmtdir);
         } catch (Exception ex) {
             String title = getIntent().getExtras().getString("TITLE");
             Log.d("ERR", "Error loading recipe for " + title);

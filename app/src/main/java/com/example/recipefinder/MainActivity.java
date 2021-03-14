@@ -51,7 +51,12 @@ public class MainActivity extends AppCompatActivity {
             if (ingredientsList.contains(searchIngred)) {
                 int index = ingredientsList.indexOf(searchIngred);
                 CheckBox search = findViewById(index);
-                search.setChecked(true);
+                try {
+                    search.setChecked(true);
+                } catch (Exception e) {
+                    Log.d("CHKBOXERR", "Error checking " + searchIngred);
+                }
+                editTxtSearchIngredient.setText(""); // clear edit text after saving
             } else {
                 Toast.makeText(this, searchIngred + " not found", Toast.LENGTH_SHORT).show();
             }
