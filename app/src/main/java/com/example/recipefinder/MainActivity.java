@@ -54,6 +54,31 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, searchIngred + " not found", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // instantiate button for search recipes
+        Button btnSearchRecipe = findViewById(R.id.btnSearchRecipes);
+        // create bundle to pass checked ingredients to recipe list page
+        Bundle ingredientsBundle = new Bundle();
+
+        // setonclicklistener for search recipe to collect checked ingredients, put into bundle and pass to next intent
+        btnSearchRecipe.setOnClickListener((View view) -> {
+            // create array to store keys for bundle
+            ArrayList<String> keys = new ArrayList<>(Arrays.asList());
+            for (int i = 0; i < gridViewIngredients.getChildCount(); i++) {
+                CheckBox child = (CheckBox)gridViewIngredients.getChildAt(i);
+                if (child.isChecked()) {
+                    String key = "key" + i;
+                    keys.add(key);
+                    ingredientsBundle.putString(key, ingredientsList.get(i));
+                }
+            }
+//             NEXT INTENT SHOULD BE RECIPELIST.CLASS -- RecipeDisplay used for now
+            ingredientsBundle.putStringArrayList("KEYS", keys);
+            Intent intent = new Intent(this, RecipeDisplay.class);
+            intent.putExtras(ingredientsBundle);
+
+            startActivity(intent);
+        });
     }
 
     // method to read ingredients csv
