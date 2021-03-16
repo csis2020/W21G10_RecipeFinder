@@ -11,6 +11,10 @@
     <string name="BtnTestTxt">Test</string>
     <string name="txtRestListTitle">Recipes</string>
     <string name="editTxtServingSize">Serving Size (deafult: 1)</string>
-    <string name="txtRecipeResultTxt" >recipe name</string>
+    <string name="txtRecipeResultTxt">recipe name</string>
     <string name="txtNoResult" />
+    <string name="ImageViewbg">Background image</string>
+    <string name="textViewName">Recipe_Finder</string>
+    <string name="ImageView6">Logo</string>
+    <string name="ImageView5">Another food photo</string>
 </resources>
