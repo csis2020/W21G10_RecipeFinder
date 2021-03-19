@@ -51,7 +51,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
 
             if(checkedlist.size() == 0){
                 txtViewCheckBoxListResult.setText("There is no matched result. Try again.");
-                Toast.makeText(this, "Sorry!! No result is founded.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Sorry!! No result found.", Toast.LENGTH_SHORT).show();
             } else {
                 txtViewCheckBoxListResult.setText("");
                 createRecipeResultList(checkedlist);

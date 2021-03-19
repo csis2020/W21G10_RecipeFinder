@@ -21,4 +21,23 @@
     <string name="textViewreg">Register</string>
     <string name="textView">Login</string>
     <string name="textViewSign">Log in</string>
+    <string name="editTextTextUserName">Username</string>
+    <string name="editTextEmail">Email</string>
+    <string name="editTextPassword1">Password</string>
+    <string name="editTextConfirmPassword">Confirm Password</string>
+    <string name="textView2">Already have an account?</string>
+    <string name="btnRegister">Register</string>
+    <string name="editTextPassword">Password</string>
+    <string name="editTextEmailAddress">Email</string>
+    <string name="btnLogin">Log In</string>
+    <string name="textView3">Forgot Password?</string>
+    <string name="btnGoogle">Google</string>
+    <string name="btnFacebook">Facebook</string>
+    <string name="TextView6">Register</string>
+    <string name="TextViewLogin">Login</string>
+    <string name="btnGoogle2">Google</string>
+    <string name="btnFacebook2">Facebook</string>
+    <string name="TextViewSocial">Or Signin With</string>
+    <string name="checkBox">Remember me</string>
+    <string name="textViewSignIn">Register</string>
 </resources>

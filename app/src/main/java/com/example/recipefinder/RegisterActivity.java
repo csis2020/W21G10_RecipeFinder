@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -12,7 +13,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(intent);
+        TextView btn = findViewById(R.id.TextViewLogin);
+        btn.setOnClickListener(
+                view -> startActivity(new Intent(RegisterActivity.this, LoginActivity.class)));
     }
-}
+    }
