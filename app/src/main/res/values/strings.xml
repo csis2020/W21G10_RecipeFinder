@@ -17,4 +17,8 @@
     <string name="textViewName">Recipe_Finder</string>
     <string name="ImageView6">Logo</string>
     <string name="ImageView5">Another food photo</string>
+    <string name="textViewLogo">Recipe_Finder</string>
+    <string name="textViewreg">Register</string>
+    <string name="textView">Login</string>
+    <string name="textViewSign">Log in</string>
 </resources>
