@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < gridViewIngredients.getChildCount(); i++) {
                 CheckBox child = (CheckBox)gridViewIngredients.getChildAt(i);
                 if (child.isChecked()) {
-                    String key = "key" + i;
+                    //String key = "key" + i;
+                    String key = ingredientsList.get(i);
                     keys.add(key);
                     ingredientsBundle.putString(key, ingredientsList.get(i));
                 }

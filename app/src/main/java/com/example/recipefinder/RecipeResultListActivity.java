@@ -2,7 +2,10 @@ package com.example.recipefinder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,8 +32,15 @@ public class RecipeResultListActivity extends AppCompatActivity {
     List<Integer> recipeImagesList = new ArrayList<>(Arrays.asList());
     List<String> recipeIngredientsList = new ArrayList<>(Arrays.asList());
     List<String> recipeDirectionsList = new ArrayList<>(Arrays.asList());
+    List<String> cuisineList = new ArrayList<>(Arrays.asList());
+    List<String> servingList = new ArrayList<>(Arrays.asList());
+    List<String> prepTimeList = new ArrayList<>(Arrays.asList());
+    List<String> cookTimeList = new ArrayList<>(Arrays.asList());
+    List<String> totalTimeList = new ArrayList<>(Arrays.asList());
     //-----------------------------------
 
+    SQLiteDatabase RecipesDb;
+    int matchedPercent = 0;
 
 
     @Override
@@ -43,18 +53,47 @@ public class RecipeResultListActivity extends AppCompatActivity {
             Bundle bundle = getIntent().getExtras();
             ArrayList<String> checkedIngredlist = bundle.getStringArrayList("KEYS");
 
+            String checkedKeys = "";
+            for(int i=0; i<checkedIngredlist.size(); i++){
+                checkedKeys += checkedIngredlist.get(i) + ",";
+            }
 
-            readCSVStudents(); //Temp code
 
-            ArrayList<Integer> checkedlist = generateCheckBoxList();
+
+            readCSVRecipes(); //Temp code
+
+            createDB();
+            createTables();
+
+            RecipeResult recipeResult;
+            for(int i = 1; i < recipeTitlesList.size() ; i++){
+                insertRecipesToTable(recipeTitlesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
+                                        cuisineList.get(i), servingList.get(i), prepTimeList.get(i), cookTimeList.get(i), totalTimeList.get(i));
+
+            }
+
+            //ArrayList<Integer> checkedlist = generateCheckBoxList();
             TextView txtViewCheckBoxListResult = findViewById(R.id.txtViewCheckBoxListResult);
 
-            if(checkedlist.size() == 0){
-                txtViewCheckBoxListResult.setText("There is no matched result. Try again.");
+            if(checkedIngredlist.size() == 0){
+                txtViewCheckBoxListResult.setText("There is no matched result with " + checkedKeys);
                 Toast.makeText(this, "Sorry!! No result found.", Toast.LENGTH_SHORT).show();
             } else {
-                txtViewCheckBoxListResult.setText("");
-                createRecipeResultList(checkedlist);
+                //txtViewCheckBoxListResult.setText("");
+
+                //createRecipeResultList(checkedlist);
+                int percent = selectRecipeFromTable(checkedIngredlist);
+                String textStr;
+                if(recipeResultList.size() == 0) {
+                    textStr = "No result which matches over "+percent+"% \nwith "+checkedKeys;
+                }
+                else{
+                    if(percent == 100)
+                        textStr = "100% matched result with "+checkedKeys;
+                    else
+                        textStr = "Matched result over"+percent+"% \nwith "+checkedKeys;
+                }
+                txtViewCheckBoxListResult.setText(textStr);
 
                 ListView listViewResultList = findViewById(R.id.listViewResultList);
                 RecipeResultAdapter recipeResultAdapter = new RecipeResultAdapter(recipeResultList);
@@ -87,6 +126,206 @@ public class RecipeResultListActivity extends AppCompatActivity {
 
     }
 
+   private void createDB(){
+        try{
+            RecipesDb = openOrCreateDatabase("Recipes.db",MODE_PRIVATE,null);
+            Toast.makeText(this, "Database ready", Toast.LENGTH_SHORT).show();
+        } catch (Exception ex){
+            Log.e("[HKKO]", ex.getMessage());
+        }
+    }
+
+    private void createTables(){
+        try{
+            String setPRAGMAForeignKeysOn = "PRAGMA foreign_keys = ON;";
+            String dropRecipesTableCmd = "DROP TABLE IF EXISTS " + "recipes;";
+            String createRecipesTableCmd = "CREATE TABLE recipes (title TEXT PRIMARY KEY, ingredients TEXT, directions TEXT, "+
+                                                                "cuisine TEXT, serving TEXT, prepTime TEXT, cookTime TEXT, totalTime TEXT);";
+
+            RecipesDb.execSQL(setPRAGMAForeignKeysOn);
+            RecipesDb.execSQL(dropRecipesTableCmd); //dropping recipes table
+            RecipesDb.execSQL(createRecipesTableCmd); //creating recipes table
+
+        }catch(Exception ex){
+            Log.d("[HKKO]", "_createTables_"+ex.getMessage());
+        }
+    }
+
+    private void insertRecipesToTable(String title, String ingredients, String directions,
+                            String cuisine, String serving, String prepTime, String cookTime, String totalTime){
+            long result;
+            ContentValues val = new ContentValues();
+            val.put("title", title);
+            val.put("ingredients", ingredients);
+            val.put("directions", directions);
+            val.put("cuisine", cuisine);
+            val.put("serving", serving);
+            val.put("prepTime", prepTime);
+            val.put("cookTime", cookTime);
+            val.put("totalTime", totalTime);
+
+            try{
+                result = RecipesDb.insert("Recipes", null, val );
+                if(result != -1){
+                    //Log.d("[HKKO]", "rowid = " + result + " inserted recipes with title: " + title);
+                }else{
+                    Log.d("[HKKO]", "Error inserting Recipes for " + title);
+                }
+
+
+            }catch(Exception ex){
+                Log.d("[HKKO]", "Error adding Recipes for " + title + " " + ex.getMessage());
+            }
+    }
+
+    private int selectRecipeFromTable(ArrayList<String> keys){
+
+        int i;
+        String condition;
+        String title, ingredients, direction;
+        int imageId;
+        boolean noMachedResult = true;
+        //int count = 0;
+        recipeResultList = new ArrayList<>();
+        List<String> queryStrings = new ArrayList<>();
+        String tempStr;
+        int missedKeys = 0;
+        int numOfResult = 0;
+
+        condition ="%";
+        for(i=0; i<keys.size(); i++){
+            condition += keys.get(i) + "%";
+        }
+
+
+        while(noMachedResult && (missedKeys < 2)) {
+
+            //tempStr = "SELECT * FROM recipes WHERE ingredients LIKE '"+ condition +"';";
+            queryStrings = setOfSelectQuries(missedKeys, keys);
+
+            for(i=0; i<queryStrings.size(); i++) {
+                try {
+                    Cursor cursor = RecipesDb.rawQuery(queryStrings.get(i), null);
+
+                    //Log.d("[HKKO]", "_NumOfSELECT=" + cursor.getCount() + "_");
+
+
+                    if (cursor != null) {
+                        cursor.moveToFirst();
+
+                        while (!cursor.isAfterLast()) {
+                            title = cursor.getString(0); //first column - title;
+                            ingredients = cursor.getString(1); // second column - ingredients;
+                            direction = cursor.getString(2); //third column - direction
+                            imageId = R.drawable.korean_bibimbap;
+                            RecipeResult recipeResult = new RecipeResult(title, imageId, ingredients, direction);
+                            recipeResultList.add(recipeResult);
+                            numOfResult++;
+
+                            cursor.moveToNext();
+
+                        }
+                    }
+                } catch (Exception ex) {
+                    Log.d("[HKKO]]", "Querying recipes select error " + ex.getMessage());
+                }
+
+            }
+            if(numOfResult > 0)
+                noMachedResult = false;
+            else
+                missedKeys++;
+        }
+
+        if(numOfResult == 0)
+            missedKeys--;
+        int percent = (int)((keys.size() - missedKeys) *100/keys.size());
+
+
+        return percent;
+    }
+
+    private List<String> setOfSelectQuries(int numOfMissedKeys, ArrayList<String> keys){
+        List<String> queries = new ArrayList<>();
+        String selectStr;
+        String condition;
+        int i, j;
+
+        if(numOfMissedKeys == 0){
+            condition ="%";
+            for(i=0; i<keys.size(); i++){
+                condition += keys.get(i) + "%";
+            }
+
+            selectStr = "SELECT * FROM recipes WHERE ingredients LIKE '"+ condition +"';";
+            queries.add(selectStr);
+        }else if(numOfMissedKeys == 1){
+
+            for(i=0; i<keys.size();i++){
+                condition ="%";
+                for(j=0; j<keys.size(); j++){
+                    if(i!=j)
+                        condition += keys.get(j) + "%";
+                }
+                selectStr = "SELECT * FROM recipes WHERE ingredients LIKE '"+ condition +"';";
+                queries.add(selectStr);
+
+            }
+
+
+        }
+
+
+
+        return queries;
+    }
+    /*
+    private int selectRecipeFromTable(ArrayList<String> keys){
+
+        int i;
+        String condition;
+        String title, ingredients, direction;
+        int imageId;
+        recipeResultList = new ArrayList<>();
+
+
+        condition ="%";
+        for(i=0; i<keys.size(); i++){
+            condition += keys.get(i) + "%";
+        }
+
+
+        String queryStr = "SELECT * FROM recipes WHERE ingredients LIKE '"+ condition +"';";
+        try {
+            Cursor cursor = RecipesDb.rawQuery(queryStr, null);
+
+            Log.d("[HKKO]", "_NumOfSELECT=" + cursor.getCount()+"_");
+
+
+            if(cursor != null){
+                cursor.moveToFirst();
+
+                while(!cursor.isAfterLast()) {
+                    title = cursor.getString(0); //first column - title;
+                    ingredients = cursor.getString(1); // second column - ingredients;
+                    direction = cursor.getString(2); //third column - direction
+                    imageId = R.drawable.korean_bibimbap;
+                    RecipeResult recipeResult = new RecipeResult(title, imageId, ingredients, direction);
+                    recipeResultList.add(recipeResult);
+
+                    cursor.moveToNext();
+                }
+            }
+
+        }catch(Exception ex){
+            Log.d("[HKKO]]", "Querying recipes select error " + ex.getMessage());
+        }
+
+    }
+    */
+
+
+    //-------temp code ---------------------------------------------------start
     private void createRecipeResultList( ArrayList<Integer> checkedlist){
         recipeResultList = new ArrayList<>();
 
@@ -122,8 +361,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
         return recipeList;
     }
 
-    //-------temp code ---------------------------------------------------start
-    private void readCSVStudents(){
+    private void readCSVRecipes(){
 
         //populate the list
         InputStream inputStream = getResources().openRawResource(R.raw.recipes); //students.csv file
@@ -146,6 +384,18 @@ public class RecipeResultListActivity extends AppCompatActivity {
                 recipeImagesList.add(R.drawable.korean_bibimbap); //temporarily, we are using fixed number;
                 recipeIngredientsList.add(fieldArray[1]);
                 recipeDirectionsList.add(fieldArray[2]);
+                cuisineList.add(fieldArray[3]);
+                servingList.add(fieldArray[4]);
+                prepTimeList.add(fieldArray[5]);
+                cookTimeList.add(fieldArray[6]);
+                totalTimeList.add(fieldArray[7]);
+
+                //Log.d("[HKKO]", "["+i+"][0]: "+ fieldArray[0]);
+                //Log.d("[HKKO]", "["+i+"][1]: "+ fieldArray[1]);
+                //Log.d("[HKKO]", "["+i+"][2]: "+ fieldArray[2]);
+                //Log.d("[HKKO]", "["+i+"][3]: "+ fieldArray[3] + ", ["+i+"][4]:" +fieldArray[4]+
+                //                            ", ["+i+"][5]:" +fieldArray[5]+", ["+i+"][6]:" +fieldArray[6]+", ["+i+"][7]:" +fieldArray[7] );
+
                 i++;
             }
         }catch(IOException ex){
@@ -160,6 +410,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
             }
         }
     }
+
     //-------temp code ---------------------------------------------------end
 
 }
