@@ -34,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
 
         //scale increases in size
 
-        imageView5.animate().translationY(1100).setDuration(1500).setStartDelay(1500);
+        imageView5.animate().translationY(1050).setDuration(1500).setStartDelay(1500);
 
         imageViewbg.animate().translationY(-2500).setDuration(2000).setStartDelay(2000);
         imageViewbg.animate().scaleXBy(1).setDuration(1500).setStartDelay(1500);
