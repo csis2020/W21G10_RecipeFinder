@@ -14,8 +14,16 @@
         android:text="@string/txtViewMainTitle"
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnsignOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btnsignOut"
+        app:layout_constraintBottom_toTopOf="@+id/tabRowSearch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/txtViewMainTitle" />
 
     <TableRow
         android:id="@+id/tabRowSearch"

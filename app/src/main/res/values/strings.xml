@@ -41,4 +41,5 @@
     <string name="checkBox">Remember me</string>
     <string name="textViewSignIn">Register</string>
     <string name="textViewSkip">Skip</string>
+    <string name="btnsignOut">SignOut</string>
 </resources>
