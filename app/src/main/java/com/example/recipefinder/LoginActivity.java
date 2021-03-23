@@ -21,7 +21,7 @@ import com.google.android.gms.tasks.Task;
 
 public class LoginActivity extends AppCompatActivity {
 
-     int RC_SIGN_IN = 0;
+    int RC_SIGN_IN = 0;
     SignInButton signin;
     GoogleSignInClient mGoogleSignInClient;
 

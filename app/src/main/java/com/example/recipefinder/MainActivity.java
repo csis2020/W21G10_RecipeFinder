@@ -37,9 +37,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     // list for ingredients from csv to adapter
-TextView name,email,id;
-ImageView imageView;
-Button btnsignOut;
+    TextView name,email,id;
+    ImageView imageView;
+    Button btnSignOut;
     GoogleSignInClient mGoogleSignInClient;
 
     List<String> ingredientsList = new ArrayList<>(Arrays.asList());
@@ -56,16 +56,12 @@ Button btnsignOut;
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        btnsignOut.setOnClickListener(new View.OnClickListener() {
+        btnSignOut = findViewById(R.id.btnSignOut);
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()) {
-                    // ...
-                    case R.id.btnsignOut:
-                        signOut();
-                        break;
-                    // ...
-                }
+                signOut();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
             }
         });
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);

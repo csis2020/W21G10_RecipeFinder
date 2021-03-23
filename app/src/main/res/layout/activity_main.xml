@@ -17,13 +17,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnsignOut"
+        android:id="@+id/btnSignOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btnsignOut"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:text="@string/btnSignOut"
         app:layout_constraintBottom_toTopOf="@+id/tabRowSearch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txtViewMainTitle" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TableRow
         android:id="@+id/tabRowSearch"
