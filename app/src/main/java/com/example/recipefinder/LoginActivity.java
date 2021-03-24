@@ -3,11 +3,15 @@ package com.example.recipefinder;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,15 +45,33 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // instantiate edit texts required for login
+        EditText loginemail = findViewById(R.id.editTextEmailAddress);
+        EditText loginpass = findViewById(R.id.editTextTextPassword3);
+
+        // remember me function
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sharedPreferences.contains("EMAIL")) {
+            String email = sharedPreferences.getString("EMAIL", "");
+            loginemail.setText(email);
+            String pass = sharedPreferences.getString("PASSWORD", "");
+            loginpass.setText(pass);
+        }
+
+        CheckBox cb = findViewById(R.id.checkBox);
+        cb.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+            editor.putString("EMAIL", loginemail.getText().toString());
+            editor.putString("PASSWORD", loginpass.getText().toString());
+            editor.commit();
+        });
+
         // initialize db object
         userdb = new RegisterDb(this);
 
         TextView btn = findViewById(R.id.textViewSignIn);
         btn.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
-
-        // instantiate edit texts required for login
-        EditText loginemail = findViewById(R.id.editTextEmailAddress);
-        EditText loginpass = findViewById(R.id.editTextTextPassword3);
 
         // set on click listener for log in with db
         Button btnLogin = findViewById(R.id.btnLogin);
@@ -68,16 +90,20 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             // iterate through db to check email and password
+            boolean signedin = false; // set boolean for sign in, use only for toast
             for (int i = 0; i < users.size(); i++) {
                 if (loginemail.getText().toString().equals(users.get(i)[1]) && loginpass.getText().toString().equals(users.get(i)[2])) {
+                    signedin = true;
                     Log.d("DB", "Successful log in for " + users.get(i)[0]);
                     Toast.makeText(this, "Welcome " + users.get(i)[0], Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(this, MainActivity.class));
-                } else {
-                    Log.d("DB", "Unsuccessful log in for " + loginemail.getText().toString());
-                    Toast.makeText(this, "Username and email do not match", Toast.LENGTH_SHORT).show();
                 }
             }
+
+             if (!signedin) {
+                 Log.d("DB", "Unsuccessful log in for " + loginemail.getText().toString());
+                 Toast.makeText(this, "Username and email do not match", Toast.LENGTH_SHORT).show();
+             }
         });
 
         signin = findViewById(R.id.sign_in_button);
