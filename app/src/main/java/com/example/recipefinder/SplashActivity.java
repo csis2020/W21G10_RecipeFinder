@@ -53,7 +53,8 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
 
                 startActivity(new Intent(SplashActivity.this,
-                        RegisterActivity.class));
+                                    MainActivity.class)); //added by HYE KYUNG KO
+                        //        RegisterActivity.class));
 
                 finish();
 

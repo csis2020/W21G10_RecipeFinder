@@ -58,16 +58,15 @@ public class RecipeResultListActivity extends AppCompatActivity {
                 checkedKeys += checkedIngredlist.get(i) + ",";
             }
 
-
-
             readCSVRecipes(); //Temp code
 
             createDB();
+
             createTables();
 
             RecipeResult recipeResult;
             for(int i = 1; i < recipeTitlesList.size() ; i++){
-                insertRecipesToTable(recipeTitlesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
+                insertRecipesToTable(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
                                         cuisineList.get(i), servingList.get(i), prepTimeList.get(i), cookTimeList.get(i), totalTimeList.get(i));
 
             }
@@ -83,6 +82,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
 
                 //createRecipeResultList(checkedlist);
                 int percent = selectRecipeFromTable(checkedIngredlist);
+
                 String textStr;
                 if(recipeResultList.size() == 0) {
                     textStr = "No result which matches over "+percent+"% \nwith "+checkedKeys;
@@ -93,6 +93,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
                     else
                         textStr = "Matched result over"+percent+"% \nwith "+checkedKeys;
                 }
+
                 txtViewCheckBoxListResult.setText(textStr);
 
                 ListView listViewResultList = findViewById(R.id.listViewResultList);
@@ -109,8 +110,8 @@ public class RecipeResultListActivity extends AppCompatActivity {
                     selectBundle.putString("INGREDS", recipeResultList.get(position).ingredient);
                     selectBundle.putString("DIRECTIONS", recipeResultList.get(position).direction);
 
-                    Log.d("[HKKO]", "RecipeResultListActivity_ingredient:"+ recipeResultList.get(position).ingredient);
-                    Log.d("[HKKO]", "RecipeResultListActivity_direction:"+ recipeResultList.get(position).direction);
+                   // Log.d("[HKKO]", "RecipeResultListActivity_ingredient:"+ recipeResultList.get(position).ingredient);
+                  //  Log.d("[HKKO]", "RecipeResultListActivity_direction:"+ recipeResultList.get(position).direction);
 
                     Intent intent = new Intent(RecipeResultListActivity.this, RecipeDisplay.class);
                     intent.putExtras(selectBundle);
@@ -129,7 +130,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
    private void createDB(){
         try{
             RecipesDb = openOrCreateDatabase("Recipes.db",MODE_PRIVATE,null);
-            Toast.makeText(this, "Database ready", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Database ready", Toast.LENGTH_SHORT).show();
         } catch (Exception ex){
             Log.e("[HKKO]", ex.getMessage());
         }
@@ -139,7 +140,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
         try{
             String setPRAGMAForeignKeysOn = "PRAGMA foreign_keys = ON;";
             String dropRecipesTableCmd = "DROP TABLE IF EXISTS " + "recipes;";
-            String createRecipesTableCmd = "CREATE TABLE recipes (title TEXT PRIMARY KEY, ingredients TEXT, directions TEXT, "+
+            String createRecipesTableCmd = "CREATE TABLE recipes (title TEXT PRIMARY KEY, imgDrawableId INTEGER,  ingredients TEXT, directions TEXT, "+
                                                                 "cuisine TEXT, serving TEXT, prepTime TEXT, cookTime TEXT, totalTime TEXT);";
 
             RecipesDb.execSQL(setPRAGMAForeignKeysOn);
@@ -151,11 +152,12 @@ public class RecipeResultListActivity extends AppCompatActivity {
         }
     }
 
-    private void insertRecipesToTable(String title, String ingredients, String directions,
+    private void insertRecipesToTable(String title, int imgDrawableId, String ingredients, String directions,
                             String cuisine, String serving, String prepTime, String cookTime, String totalTime){
             long result;
             ContentValues val = new ContentValues();
             val.put("title", title);
+            val.put("imgDrawableId", imgDrawableId);
             val.put("ingredients", ingredients);
             val.put("directions", directions);
             val.put("cuisine", cuisine);
@@ -215,9 +217,10 @@ public class RecipeResultListActivity extends AppCompatActivity {
 
                         while (!cursor.isAfterLast()) {
                             title = cursor.getString(0); //first column - title;
-                            ingredients = cursor.getString(1); // second column - ingredients;
-                            direction = cursor.getString(2); //third column - direction
-                            imageId = R.drawable.korean_bibimbap;
+                            imageId = cursor.getInt(1); //second column - image drawable id;
+                            ingredients = cursor.getString(2); // third column - ingredients;
+                            direction = cursor.getString(3); //forth column - direction
+
                             RecipeResult recipeResult = new RecipeResult(title, imageId, ingredients, direction);
                             recipeResultList.add(recipeResult);
                             numOfResult++;
@@ -370,31 +373,36 @@ public class RecipeResultListActivity extends AppCompatActivity {
         try{
             int i=0;
             String csvLine;
+            String imgDrawableName;
+            int imgID;
             while((csvLine = reader.readLine()) != null){
                 String[] fieldArray = csvLine.split(",");
                 //fieldArray[0] : String,  Title
-                //fieldArray[1] : String,  Ingredients
-                //fieldArray[2] : String,  Directions
-                //fieldArray[3] : String,  Cuisine
-                //fieldArray[4] : int, Serving
-                //fieldArray[5] : int, cook time
-                //fieldArray[6] : int,  total time
+                //fieldArray[1] : String,  image
+                //fieldArray[2] : String,  Ingredients
+                //fieldArray[3] : String,  Directions
+                //fieldArray[4] : String,  Cuisine
+                //fieldArray[5] : int, Serving
+                //fieldArray[6] : int, cook time
+                //fieldArray[7] : int,  total time
 
                 recipeTitlesList.add(fieldArray[0]);
-                recipeImagesList.add(R.drawable.korean_bibimbap); //temporarily, we are using fixed number;
-                recipeIngredientsList.add(fieldArray[1]);
-                recipeDirectionsList.add(fieldArray[2]);
-                cuisineList.add(fieldArray[3]);
-                servingList.add(fieldArray[4]);
-                prepTimeList.add(fieldArray[5]);
-                cookTimeList.add(fieldArray[6]);
-                totalTimeList.add(fieldArray[7]);
+                imgDrawableName = fieldArray[1].toLowerCase();
+                imgID = getResources().getIdentifier(imgDrawableName, "drawable", getPackageName());
+                recipeImagesList.add(imgID); //temporarily, we are using fixed number;
+                recipeIngredientsList.add(fieldArray[2]);
+                recipeDirectionsList.add(fieldArray[3]);
+                cuisineList.add(fieldArray[4]);
+                servingList.add(fieldArray[5]);
+                prepTimeList.add(fieldArray[6]);
+                cookTimeList.add(fieldArray[7]);
+                totalTimeList.add(fieldArray[8]);
 
-                //Log.d("[HKKO]", "["+i+"][0]: "+ fieldArray[0]);
-                //Log.d("[HKKO]", "["+i+"][1]: "+ fieldArray[1]);
+                //Log.d("[HKKO]", "["+i+"][0]: "+ fieldArray[0] + ", ["+i+"][1]: "+ fieldArray[1]);
                 //Log.d("[HKKO]", "["+i+"][2]: "+ fieldArray[2]);
-                //Log.d("[HKKO]", "["+i+"][3]: "+ fieldArray[3] + ", ["+i+"][4]:" +fieldArray[4]+
-                //                            ", ["+i+"][5]:" +fieldArray[5]+", ["+i+"][6]:" +fieldArray[6]+", ["+i+"][7]:" +fieldArray[7] );
+                //Log.d("[HKKO]", "["+i+"][3]: "+ fieldArray[3]);
+                //Log.d("[HKKO]", "["+i+"][4]: "+ fieldArray[4] + ", ["+i+"][5]:" +fieldArray[5]+
+                //                            ", ["+i+"][6]:" +fieldArray[6]+", ["+i+"][7]:" +fieldArray[7]+", ["+i+"][8]:" +fieldArray[8] );
 
                 i++;
             }
