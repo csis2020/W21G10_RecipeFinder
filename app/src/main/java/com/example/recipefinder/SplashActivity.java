@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
