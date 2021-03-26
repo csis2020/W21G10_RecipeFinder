@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,8 +51,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
 
                 startActivity(new Intent(SplashActivity.this,
-                                    MainActivity.class)); //added by HYE KYUNG KO
-                        //        RegisterActivity.class));
+                                RegisterActivity.class));
 
                 finish();
 
