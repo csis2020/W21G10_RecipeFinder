@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class RecipeFinderDBManager extends SQLiteOpenHelper {
 
@@ -48,6 +49,7 @@ public class RecipeFinderDBManager extends SQLiteOpenHelper {
 
     private RecipeFinderDBManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -58,6 +60,7 @@ public class RecipeFinderDBManager extends SQLiteOpenHelper {
         String createUsersQuery = "CREATE TABLE " + USERS_TABLE_NAME + "(" + COLUMN_USERNAME + " TEXT NOT NULL PRIMARY KEY, " +
                                                         COLUMN_EMAIL + " TEXT NOT NULL, " +
                                                         COLUMN_PASSWORD + " TEXT NOT NULL);";
+
 
 
         String createRecipesQuery = "CREATE TABLE " + RECIPES_TABLE_NAME + "(" + COLUMN_TITLE + " TEXT PRIMARY KEY, " +
@@ -74,6 +77,7 @@ public class RecipeFinderDBManager extends SQLiteOpenHelper {
 
         //db.execSQL(setPRAGMAForeignKeysOn);
         db.execSQL(createUsersQuery);
+
         db.execSQL(createRecipesQuery);
 
     }
@@ -121,7 +125,26 @@ public class RecipeFinderDBManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         return db.insert(RECIPES_TABLE_NAME, null, contentValues) != -1;
+    }
 
+    public boolean updateRecipe(String title, int imgDrawableId, String ingredients, String directions,
+                             String cuisine, String serving, String prepTime, String cookTime, String totalTime ){
+        ContentValues contentValues = new ContentValues();
+        //contentValues.put(COLUMN_TITLE, title);
+        contentValues.put(COLUMN_IMAGE_ID, imgDrawableId);
+        contentValues.put(COLUMN_INGREDIENTS, ingredients);
+        contentValues.put(COLUMN_DIRECTIONS, directions);
+        contentValues.put(COLUMN_CUISINE, cuisine);
+        contentValues.put(COLUMN_SERVING, serving);
+        contentValues.put(COLUMN_PREP_TIME, prepTime);
+        contentValues.put(COLUMN_COOK_TIME, cookTime);
+        contentValues.put(COLUMN_TOTAL_TIME, totalTime);
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        Log.d("[HKKO]", " _MainActivity_update Recipes["+title+"] into Table.");
+
+        return db.update(RECIPES_TABLE_NAME, contentValues, COLUMN_TITLE + "=?", new String[]{title}) != -1;
     }
 
     public Cursor getAllRecipes(){

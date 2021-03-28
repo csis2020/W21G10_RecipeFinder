@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -87,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
             id.setText(personId);
             Glide.with(this).load(String.valueOf(personPhoto)).into(imageView);
         }
+
+
 
         //Insert Recipes' data to the recipes table in DB.
         addRecipesToDB();
@@ -185,19 +188,28 @@ public class MainActivity extends AppCompatActivity {
     private void addRecipesToDB(){
         boolean result;
         Log.d("[HKKO]", " addRecipesToDB in.");
-
+        Log.d("[HKKO]", " addRecipesToDB Before calling dbInsert.");
         //call method to read Recipes.csv.
         readCSVRecipes();
 
         RecipeFinderDBManager dbManager = RecipeFinderDBManager.getInstance(this);
 
+        Log.d("[HKKO]", " _MainActivity_add Recipes into Table.");
         for(int i = 1; i < recipeTitlesList.size() ; i++){
             result = dbManager.addRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
+            //result = dbManager.updateRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
                     cuisineList.get(i), servingList.get(i), prepTimeList.get(i), cookTimeList.get(i), totalTimeList.get(i));
+
             if(!result){
                 Log.d("[HKKO]", " addRecipesToDB["+i+"] is failed.");
             }
+            else{
+                Log.d("[HKKO]", " addRecipesToDB["+i+"] is successful.");
+            }
         }
+
+        Log.d("[HKKO]", " addRecipesToDB after calling dbInsert.");
+
 
     }
 
