@@ -105,6 +105,10 @@ public class RecipeResultListActivity extends AppCompatActivity {
                     selectBundle.putInt("IMG", recipeResultList.get(position).recipeImgID);
                     selectBundle.putString("INGREDS", recipeResultList.get(position).ingredient);
                     selectBundle.putString("DIRECTIONS", recipeResultList.get(position).direction);
+                    selectBundle.putString("SERVINGSZ", recipeResultList.get(position).servingsz);
+                    selectBundle.putString("PREPTIME", recipeResultList.get(position).preptime);
+                    selectBundle.putString("COOKTIME", recipeResultList.get(position).cooktime);
+                    selectBundle.putString("TOTALTIME", recipeResultList.get(position).totaltime);
 
                    // Log.d("[HKKO]", "RecipeResultListActivity_ingredient:"+ recipeResultList.get(position).ingredient);
                   //  Log.d("[HKKO]", "RecipeResultListActivity_direction:"+ recipeResultList.get(position).direction);
@@ -127,9 +131,9 @@ public class RecipeResultListActivity extends AppCompatActivity {
 
         int i;
         String condition;
-        String title, ingredients, direction;
+        String title, ingredients, direction, servingsz, preptime, cooktime, totaltime;
         int imageId;
-        boolean noMachedResult = true;
+        boolean noMatchedResult = true;
         //int count = 0;
         recipeResultList = new ArrayList<>();
         List<String> queryStrings = new ArrayList<>();
@@ -147,7 +151,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
         dbManager = RecipeFinderDBManager.getInstance(this);
         SQLiteDatabase recipesDB = dbManager.getWritableDatabase();
 
-        while(noMachedResult && (missedKeys < 2)) {
+        while(noMatchedResult && (missedKeys < 2)) {
 
             //tempStr = "SELECT * FROM recipes WHERE ingredients LIKE '"+ condition +"';";
             queryStrings = setOfSelectQuries(missedKeys, keys);
@@ -170,8 +174,12 @@ public class RecipeResultListActivity extends AppCompatActivity {
                             imageId = cursor.getInt(1); //second column - image drawable id;
                             ingredients = cursor.getString(2); // third column - ingredients;
                             direction = cursor.getString(3); //forth column - direction
+                            servingsz = cursor.getString(5); // sixth column - serving size;
+                            preptime = cursor.getString(6); // seventh column - prep time;
+                            cooktime = cursor.getString(7); // eighth column - cook time;
+                            totaltime = cursor.getString(8); // ninth column - total time;
 
-                            RecipeResult recipeResult = new RecipeResult(title, imageId, ingredients, direction);
+                            RecipeResult recipeResult = new RecipeResult(title, imageId, ingredients, direction, servingsz, preptime, cooktime, totaltime);
                             recipeResultList.add(recipeResult);
                             numOfResult++;
 
@@ -190,7 +198,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
 
             }
             if(numOfResult > 0)
-                noMachedResult = false;
+                noMatchedResult = false;
             else
                 missedKeys++;
         }

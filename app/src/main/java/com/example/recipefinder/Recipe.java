@@ -9,6 +9,7 @@ import java.util.List;
 public class Recipe {
     String recipeTitle; // recipe title
     Image recipeImage; // recipe image
+    List<String> recipeInfo; // recipe info
     List<String> ingredientsList; // list of ingredients for recipe
     List<String> directions; // list of directions for recipe
 
@@ -33,6 +34,15 @@ public class Recipe {
     public void setRecipeImage(Image recipeImage) {
         this.recipeImage = recipeImage;
     }
+
+    public List<String> getRecipeInfo() {
+        return recipeInfo;
+    }
+
+    public void setRecipeInfo(List<String> recipeInfo) {
+        this.recipeInfo = recipeInfo;
+    }
+
 
     public List<String> getIngredientsList() {
         return ingredientsList;

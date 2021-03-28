@@ -7,12 +7,20 @@ public class RecipeResult {
     int recipeImgID;
     String ingredient;
     String direction;
+    String servingsz;
+    String preptime;
+    String cooktime;
+    String totaltime;
 
-    public RecipeResult(String recipeName, int recipeImgID, String ingredient, String direction) {
+    public RecipeResult(String recipeName, int recipeImgID, String ingredient, String direction, String servingsz, String preptime, String cooktime, String totaltime) {
         this.recipeName = recipeName;
         this.recipeImgID = recipeImgID;
         this.ingredient = ingredient;
         this.direction = direction;
+        this.servingsz = servingsz;
+        this.preptime = preptime;
+        this.cooktime = cooktime;
+        this.totaltime = totaltime;
     }
 
     public String getRecipeName() {

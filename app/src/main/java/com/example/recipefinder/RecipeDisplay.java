@@ -16,9 +16,6 @@ import java.util.List;
 
 public class RecipeDisplay extends AppCompatActivity {
 
-    // declare image list here to get image
-    List<Integer> recipeImagesList = new ArrayList<>(Arrays.asList());
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +26,7 @@ public class RecipeDisplay extends AppCompatActivity {
         ImageView imgViewDisplay = findViewById(R.id.imgViewDisplay);
         TextView txtViewIngredients = findViewById(R.id.txtViewIngredients);
         TextView txtViewDirections = findViewById(R.id.txtViewDirections);
+        TextView txtViewRecipeInfo = findViewById(R.id.txtViewRecipeInfo);
 
         try {
             // declare bundle from intent and get information from bundle
@@ -37,6 +35,10 @@ public class RecipeDisplay extends AppCompatActivity {
             int imgId = bundle.getInt("IMG");
             String ingredients = bundle.getString("INGREDS");
             String directions = bundle.getString("DIRECTIONS");
+            String servingsz = bundle.getString("SERVINGSZ");
+            String preptime = bundle.getString("PREPTIME");
+            String cooktime = bundle.getString("COOKTIME");
+            String totaltime = bundle.getString("TOTALTIME");
 
             // set view using information obtained from bundle
             txtViewTitleDisplay.setText(title);
@@ -46,6 +48,23 @@ public class RecipeDisplay extends AppCompatActivity {
             txtViewIngredients.setText(fmtingd);
             String fmtdir = convertDirList(directions);
             txtViewDirections.setText(fmtdir);
+
+            // set textview for recipe info
+            if (!servingsz.equals("")) {
+                txtViewRecipeInfo.append("Serving Size: " + servingsz);
+            }
+
+            if (!preptime.equals("")) {
+                txtViewRecipeInfo.append("\nPrep Time: " + preptime);
+            }
+
+            if (!cooktime.equals("")) {
+                txtViewRecipeInfo.append("\nCook Time: " + cooktime);
+            }
+
+            if (!totaltime.equals("")) {
+                txtViewRecipeInfo.append("\nTotal Time: " + totaltime);
+            }
         } catch (Exception ex) {
             String title = getIntent().getExtras().getString("TITLE");
             Log.d("ERR", "Error loading recipe for " + title);
