@@ -43,6 +43,17 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
 
     List<String> ingredientsList = new ArrayList<>(Arrays.asList());
+    //For recipes.csv -------------------------------------------------------
+    List<String> recipeTitlesList = new ArrayList<>(Arrays.asList());
+    List<Integer> recipeImagesList = new ArrayList<>(Arrays.asList());
+    List<String> recipeIngredientsList = new ArrayList<>(Arrays.asList());
+    List<String> recipeDirectionsList = new ArrayList<>(Arrays.asList());
+    List<String> cuisineList = new ArrayList<>(Arrays.asList());
+    List<String> servingList = new ArrayList<>(Arrays.asList());
+    List<String> prepTimeList = new ArrayList<>(Arrays.asList());
+    List<String> cookTimeList = new ArrayList<>(Arrays.asList());
+    List<String> totalTimeList = new ArrayList<>(Arrays.asList());
+    //------------------------------------------------------------------------
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
             Glide.with(this).load(String.valueOf(personPhoto)).into(imageView);
         }
 
+        //Insert Recipes' data to the recipes table in DB.
+        addRecipesToDB();
 
         // call method to read ingredients csv into ingredientsList
         ingredientsList = ReadIngredients();
@@ -145,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
     }
     // method to read ingredients csv
     private List<String> ReadIngredients() {
+
         List<String> ingredList = new ArrayList<>(Arrays.asList());
         InputStream inputStream = getResources().openRawResource(R.raw.ingredients);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -166,4 +180,81 @@ public class MainActivity extends AppCompatActivity {
 
         return ingredList;
     }
+
+    //insert recipes from Recipes.csv fle to Recipes table in DB.
+    private void addRecipesToDB(){
+        boolean result;
+        Log.d("[HKKO]", " addRecipesToDB in.");
+
+        //call method to read Recipes.csv.
+        readCSVRecipes();
+
+        RecipeFinderDBManager dbManager = RecipeFinderDBManager.getInstance(this);
+
+        for(int i = 1; i < recipeTitlesList.size() ; i++){
+            result = dbManager.addRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
+                    cuisineList.get(i), servingList.get(i), prepTimeList.get(i), cookTimeList.get(i), totalTimeList.get(i));
+            if(!result){
+                Log.d("[HKKO]", " addRecipesToDB["+i+"] is failed.");
+            }
+        }
+
+    }
+
+    // method to read recipes csv
+    private void readCSVRecipes(){
+
+        //populate the list
+        InputStream inputStream = getResources().openRawResource(R.raw.recipes); //students.csv file
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        try{
+            int i=0;
+            String csvLine;
+            String imgDrawableName;
+            int imgID;
+            while((csvLine = reader.readLine()) != null){
+                String[] fieldArray = csvLine.split(",");
+                //fieldArray[0] : String,  Title
+                //fieldArray[1] : String,  image
+                //fieldArray[2] : String,  Ingredients
+                //fieldArray[3] : String,  Directions
+                //fieldArray[4] : String,  Cuisine
+                //fieldArray[5] : int, Serving
+                //fieldArray[6] : int, cook time
+                //fieldArray[7] : int,  total time
+
+                recipeTitlesList.add(fieldArray[0]);
+                imgDrawableName = fieldArray[1].toLowerCase();
+                imgID = getResources().getIdentifier(imgDrawableName, "drawable", getPackageName());
+                recipeImagesList.add(imgID); //temporarily, we are using fixed number;
+                recipeIngredientsList.add(fieldArray[2]);
+                recipeDirectionsList.add(fieldArray[3]);
+                cuisineList.add(fieldArray[4]);
+                servingList.add(fieldArray[5]);
+                prepTimeList.add(fieldArray[6]);
+                cookTimeList.add(fieldArray[7]);
+                totalTimeList.add(fieldArray[8]);
+
+                //Log.d("[HKKO]", "["+i+"][0]: "+ fieldArray[0] + ", ["+i+"][1]: "+ fieldArray[1]);
+                //Log.d("[HKKO]", "["+i+"][2]: "+ fieldArray[2]);
+                //Log.d("[HKKO]", "["+i+"][3]: "+ fieldArray[3]);
+                //Log.d("[HKKO]", "["+i+"][4]: "+ fieldArray[4] + ", ["+i+"][5]:" +fieldArray[5]+
+                //                            ", ["+i+"][6]:" +fieldArray[6]+", ["+i+"][7]:" +fieldArray[7]+", ["+i+"][8]:" +fieldArray[8] );
+
+                i++;
+            }
+        }catch(IOException ex){
+            Log.d("[HKKO]","__RecipeResultListActivity_ex1_"+ex);
+            throw new RuntimeException("Error reading CSV file " + ex);
+        }finally{
+            try{
+                inputStream.close();
+            }catch(IOException ex){
+                Log.d("[HKKO]","__RecipeResultListActivity_ex2_"+ex);
+                throw new RuntimeException("Error closing input stream " + ex);
+            }
+        }
+    }
+
 }

@@ -37,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
     SignInButton signin;
     GoogleSignInClient mGoogleSignInClient;
 
-    // create userdb via RegisterDb object
-    RegisterDb userdb;
+    // Get a RecipeFinderDBManger object
+    RecipeFinderDBManager dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,8 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // initialize db object
-        userdb = new RegisterDb(this);
+        //userdb = new RegisterDb(this);
+        dbManager = RecipeFinderDBManager.getInstance(this);
 
         TextView btn = findViewById(R.id.textViewSignIn);
         btn.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
@@ -77,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         Button btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener((View view) -> {
             // get all users' username and email to check if user is already in db
-            Cursor cursor = userdb.getAllUsers();
+            Cursor cursor = dbManager.getAllUsers();
             List<String[]> users = new ArrayList<>(Arrays.asList()); // create list of users from db
             if (cursor.moveToFirst()) {
                 do {

@@ -28,6 +28,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
     List<RecipeResult> recipeResultList = new ArrayList<>();
 
     //-------------temp code ------------
+    /*
     List<String> recipeTitlesList = new ArrayList<>(Arrays.asList());
     List<Integer> recipeImagesList = new ArrayList<>(Arrays.asList());
     List<String> recipeIngredientsList = new ArrayList<>(Arrays.asList());
@@ -37,9 +38,12 @@ public class RecipeResultListActivity extends AppCompatActivity {
     List<String> prepTimeList = new ArrayList<>(Arrays.asList());
     List<String> cookTimeList = new ArrayList<>(Arrays.asList());
     List<String> totalTimeList = new ArrayList<>(Arrays.asList());
+    */
+
     //-----------------------------------
 
-    SQLiteDatabase RecipesDb;
+    //SQLiteDatabase RecipesDb;
+    RecipeFinderDBManager dbManager;
     int matchedPercent = 0;
 
 
@@ -58,19 +62,11 @@ public class RecipeResultListActivity extends AppCompatActivity {
                 checkedKeys += checkedIngredlist.get(i) + ",";
             }
 
-            readCSVRecipes(); //Temp code
-
-            createDB();
-
-            createTables();
+            //readCSVRecipes(); //Temp code
+            //createDB();
+            //createTables();
 
             RecipeResult recipeResult;
-            for(int i = 1; i < recipeTitlesList.size() ; i++){
-                insertRecipesToTable(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
-                                        cuisineList.get(i), servingList.get(i), prepTimeList.get(i), cookTimeList.get(i), totalTimeList.get(i));
-
-            }
-
             //ArrayList<Integer> checkedlist = generateCheckBoxList();
             TextView txtViewCheckBoxListResult = findViewById(R.id.txtViewCheckBoxListResult);
 
@@ -127,59 +123,6 @@ public class RecipeResultListActivity extends AppCompatActivity {
 
     }
 
-   private void createDB(){
-        try{
-            RecipesDb = openOrCreateDatabase("Recipes.db",MODE_PRIVATE,null);
-            //Toast.makeText(this, "Database ready", Toast.LENGTH_SHORT).show();
-        } catch (Exception ex){
-            Log.e("[HKKO]", ex.getMessage());
-        }
-    }
-
-    private void createTables(){
-        try{
-            String setPRAGMAForeignKeysOn = "PRAGMA foreign_keys = ON;";
-            String dropRecipesTableCmd = "DROP TABLE IF EXISTS " + "recipes;";
-            String createRecipesTableCmd = "CREATE TABLE recipes (title TEXT PRIMARY KEY, imgDrawableId INTEGER,  ingredients TEXT, directions TEXT, "+
-                                                                "cuisine TEXT, serving TEXT, prepTime TEXT, cookTime TEXT, totalTime TEXT);";
-
-            RecipesDb.execSQL(setPRAGMAForeignKeysOn);
-            RecipesDb.execSQL(dropRecipesTableCmd); //dropping recipes table
-            RecipesDb.execSQL(createRecipesTableCmd); //creating recipes table
-
-        }catch(Exception ex){
-            Log.d("[HKKO]", "_createTables_"+ex.getMessage());
-        }
-    }
-
-    private void insertRecipesToTable(String title, int imgDrawableId, String ingredients, String directions,
-                            String cuisine, String serving, String prepTime, String cookTime, String totalTime){
-            long result;
-            ContentValues val = new ContentValues();
-            val.put("title", title);
-            val.put("imgDrawableId", imgDrawableId);
-            val.put("ingredients", ingredients);
-            val.put("directions", directions);
-            val.put("cuisine", cuisine);
-            val.put("serving", serving);
-            val.put("prepTime", prepTime);
-            val.put("cookTime", cookTime);
-            val.put("totalTime", totalTime);
-
-            try{
-                result = RecipesDb.insert("Recipes", null, val );
-                if(result != -1){
-                    //Log.d("[HKKO]", "rowid = " + result + " inserted recipes with title: " + title);
-                }else{
-                    Log.d("[HKKO]", "Error inserting Recipes for " + title);
-                }
-
-
-            }catch(Exception ex){
-                Log.d("[HKKO]", "Error adding Recipes for " + title + " " + ex.getMessage());
-            }
-    }
-
     private int selectRecipeFromTable(ArrayList<String> keys){
 
         int i;
@@ -199,15 +142,22 @@ public class RecipeResultListActivity extends AppCompatActivity {
             condition += keys.get(i) + "%";
         }
 
+        Log.d("[HKKO]","__RecipeResultListActivity___read data from DB.");
+
+        dbManager = RecipeFinderDBManager.getInstance(this);
+        SQLiteDatabase recipesDB = dbManager.getWritableDatabase();
 
         while(noMachedResult && (missedKeys < 2)) {
 
             //tempStr = "SELECT * FROM recipes WHERE ingredients LIKE '"+ condition +"';";
             queryStrings = setOfSelectQuries(missedKeys, keys);
 
+            Cursor cursor = null;
+
             for(i=0; i<queryStrings.size(); i++) {
                 try {
-                    Cursor cursor = RecipesDb.rawQuery(queryStrings.get(i), null);
+                    //Cursor cursor = RecipesDb.rawQuery(queryStrings.get(i), null);
+                    cursor = recipesDB.rawQuery(queryStrings.get(i), null);
 
                     //Log.d("[HKKO]", "_NumOfSELECT=" + cursor.getCount() + "_");
 
@@ -231,6 +181,11 @@ public class RecipeResultListActivity extends AppCompatActivity {
                     }
                 } catch (Exception ex) {
                     Log.d("[HKKO]]", "Querying recipes select error " + ex.getMessage());
+                    if(cursor != null)
+                        cursor.close();
+                }finally{
+                    if(cursor != null)
+                        cursor.close();
                 }
 
             }
@@ -282,6 +237,64 @@ public class RecipeResultListActivity extends AppCompatActivity {
 
         return queries;
     }
+
+        /*
+   private void createDB(){
+        try{
+            RecipesDb = openOrCreateDatabase("Recipes.db",MODE_PRIVATE,null);
+            //Toast.makeText(this, "Database ready", Toast.LENGTH_SHORT).show();
+        } catch (Exception ex){
+            Log.e("[HKKO]", ex.getMessage());
+        }
+    }
+
+    private void createTables(){
+        try{
+            String setPRAGMAForeignKeysOn = "PRAGMA foreign_keys = ON;";
+            String dropRecipesTableCmd = "DROP TABLE IF EXISTS " + "recipes;";
+            String createRecipesTableCmd = "CREATE TABLE recipes (title TEXT PRIMARY KEY, imgDrawableId INTEGER,  ingredients TEXT, directions TEXT, "+
+                                                                "cuisine TEXT, serving TEXT, prepTime TEXT, cookTime TEXT, totalTime TEXT);";
+
+            RecipesDb.execSQL(setPRAGMAForeignKeysOn);
+            RecipesDb.execSQL(dropRecipesTableCmd); //dropping recipes table
+            RecipesDb.execSQL(createRecipesTableCmd); //creating recipes table
+
+        }catch(Exception ex){
+            Log.d("[HKKO]", "_createTables_"+ex.getMessage());
+        }
+    }
+    */
+        /*
+    private void insertRecipesToTable(String title, int imgDrawableId, String ingredients, String directions,
+                            String cuisine, String serving, String prepTime, String cookTime, String totalTime){
+            long result;
+            ContentValues val = new ContentValues();
+            val.put("title", title);
+            val.put("imgDrawableId", imgDrawableId);
+            val.put("ingredients", ingredients);
+            val.put("directions", directions);
+            val.put("cuisine", cuisine);
+            val.put("serving", serving);
+            val.put("prepTime", prepTime);
+            val.put("cookTime", cookTime);
+            val.put("totalTime", totalTime);
+
+            try{
+                result = RecipesDb.insert("Recipes", null, val );
+                if(result != -1){
+                    //Log.d("[HKKO]", "rowid = " + result + " inserted recipes with title: " + title);
+                }else{
+                    Log.d("[HKKO]", "Error inserting Recipes for " + title);
+                }
+
+
+            }catch(Exception ex){
+                Log.d("[HKKO]", "Error adding Recipes for " + title + " " + ex.getMessage());
+            }
+    }
+    */
+
+
     /*
     private int selectRecipeFromTable(ArrayList<String> keys){
 
@@ -329,6 +342,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
 
 
     //-------temp code ---------------------------------------------------start
+    /*
     private void createRecipeResultList( ArrayList<Integer> checkedlist){
         recipeResultList = new ArrayList<>();
 
@@ -342,7 +356,8 @@ public class RecipeResultListActivity extends AppCompatActivity {
         }
 
     }
-
+    */
+    /*
     private ArrayList<Integer> generateCheckBoxList(){
 
         ArrayList<Integer> recipeList = new ArrayList<>();
@@ -363,7 +378,8 @@ public class RecipeResultListActivity extends AppCompatActivity {
 
         return recipeList;
     }
-
+    */
+    /*
     private void readCSVRecipes(){
 
         //populate the list
@@ -418,7 +434,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
             }
         }
     }
-
+*/
     //-------temp code ---------------------------------------------------end
 
 }

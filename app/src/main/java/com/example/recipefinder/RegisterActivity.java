@@ -20,8 +20,8 @@ public class RegisterActivity extends AppCompatActivity {
     // declare views required
     EditText editTextUserName, editTextEmail, editTextPassword, editTextConfirmPassword;
 
-    // create userdb via RegisterDb object
-    RegisterDb userdb;
+    // Get a RecipeFinderDBManger object
+    RecipeFinderDBManager dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         // initialize db object
-        userdb = new RegisterDb(this);
+        dbManager = RecipeFinderDBManager.getInstance(this);
 
         // initialize required views
         editTextUserName = findViewById(R.id.editTextUserName);
@@ -42,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         Button regBtn = findViewById(R.id.btnRegister);
         regBtn.setOnClickListener((View view) -> {
             // get all users' username and email to check if user is already in db
-            Cursor cursor = userdb.getAllUsers();
+            Cursor cursor = dbManager.getAllUsers();
             List<String[]> users = new ArrayList<>(Arrays.asList()); // create list of users from db
             if (cursor.moveToFirst()) {
                 do {
@@ -79,7 +79,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                     // add user to db if valid
                     if (valid) {
-                        added = userdb.addUser(editTextUserName.getText().toString(), editTextEmail.getText().toString(), editTextPassword.getText().toString());
+                        added = dbManager.addUser(editTextUserName.getText().toString(), editTextEmail.getText().toString(), editTextPassword.getText().toString());
+
                     }
                 } else if (!editTextPassword.getText().toString().equals(editTextConfirmPassword.getText().toString())) {
                     Log.d("DB", "Passwords do not match");
