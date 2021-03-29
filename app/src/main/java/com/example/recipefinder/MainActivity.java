@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
 
     List<String> ingredientsList = new ArrayList<>(Arrays.asList());
+
     //For recipes.csv -------------------------------------------------------
     List<String> recipeTitlesList = new ArrayList<>(Arrays.asList());
     List<Integer> recipeImagesList = new ArrayList<>(Arrays.asList());
