@@ -1,5 +1,6 @@
 package com.example.recipefinder;
 
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -37,7 +38,14 @@ public class IngredientsAdapter extends BaseAdapter {
         chkBoxIng.setId(i); // set id for search ingredients button
         chkBoxIng.setText(ingredientsList.get(i));
         view = chkBoxIng;
-
+        if (i % 2 == 1)
+        {
+            view.setBackgroundColor(Color.parseColor("#FFC39C"));
+        }
+        else
+        {
+            view.setBackgroundColor(Color.parseColor("#FFE2CF"));
+        }
         return view;
     }
 }

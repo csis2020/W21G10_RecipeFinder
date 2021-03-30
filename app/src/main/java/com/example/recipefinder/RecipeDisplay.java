@@ -3,6 +3,7 @@ package com.example.recipefinder;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -25,8 +26,11 @@ public class RecipeDisplay extends AppCompatActivity {
         TextView txtViewTitleDisplay = findViewById(R.id.txtViewTitleDisplay);
         ImageView imgViewDisplay = findViewById(R.id.imgViewDisplay);
         TextView txtViewIngredients = findViewById(R.id.txtViewIngredients);
+        TextView txtViewIngred = findViewById(R.id.txtViewIngred);
         TextView txtViewDirections = findViewById(R.id.txtViewDirections);
+        TextView txtViewDir = findViewById(R.id.txtViewDir);
         TextView txtViewRecipeInfo = findViewById(R.id.txtViewRecipeInfo);
+
 
         try {
             // declare bundle from intent and get information from bundle
@@ -46,8 +50,10 @@ public class RecipeDisplay extends AppCompatActivity {
             imgViewDisplay.setImageResource(imgId); //for test by Hye Kyung Ko
             String fmtingd = convertIngredList(ingredients);
             txtViewIngredients.setText(fmtingd);
+            txtViewIngred.setText(Html.fromHtml("<u>Ingredients:</u>"));
             String fmtdir = convertDirList(directions);
             txtViewDirections.setText(fmtdir);
+            txtViewDir.setText(Html.fromHtml("<u>Directions:</u>"));
 
             // set textview for recipe info
             if (!servingsz.equals("")) {

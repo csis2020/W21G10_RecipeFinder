@@ -101,10 +101,10 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
 
-             if (!signedin) {
-                 Log.d("DB", "Unsuccessful log in for " + loginemail.getText().toString());
-                 Toast.makeText(this, "Username and email do not match", Toast.LENGTH_SHORT).show();
-             }
+            if (!signedin) {
+                Log.d("DB", "Unsuccessful log in for " + loginemail.getText().toString());
+                Toast.makeText(this, "Username and email do not match", Toast.LENGTH_SHORT).show();
+            }
         });
 
         signin = findViewById(R.id.sign_in_button);
@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-  
+
     }
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();

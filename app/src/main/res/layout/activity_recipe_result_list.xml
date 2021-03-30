@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RecipeResultListActivity">
+    tools:context=".RecipeResultListActivity"
+    android:background="#330099ff">
 
     <TableRow
         android:id="@+id/TitleNServeSizeTable"
@@ -23,7 +24,8 @@
             android:layout_marginTop="16dp"
             android:layout_weight="0.7"
             android:text="@string/txtRestListTitle"
-            android:textSize="18sp" />
+            android:textSize="30sp"
+            android:textStyle="bold|italic" />
 
         <EditText
             android:id="@+id/editTextServingSizeTitle"

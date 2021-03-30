@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
 
     List<String> ingredientsList = new ArrayList<>(Arrays.asList());
-
     //For recipes.csv -------------------------------------------------------
     List<String> recipeTitlesList = new ArrayList<>(Arrays.asList());
     List<Integer> recipeImagesList = new ArrayList<>(Arrays.asList());
@@ -198,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("[HKKO]", " _MainActivity_add Recipes into Table.");
         for(int i = 1; i < recipeTitlesList.size() ; i++){
             result = dbManager.addRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
-            //result = dbManager.updateRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
+                    //result = dbManager.updateRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
                     cuisineList.get(i), servingList.get(i), prepTimeList.get(i), cookTimeList.get(i), totalTimeList.get(i));
 
             if(!result){
