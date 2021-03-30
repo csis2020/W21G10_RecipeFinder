@@ -1,6 +1,5 @@
 package com.example.recipefinder;
 
-import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,14 +52,7 @@ public class RecipeResultAdapter extends BaseAdapter {
         txtViewRecipeResultTitle.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 
         imgViewRecipeResult.setImageResource(recipeResultList.get(position).getRecipeImgID());
-        if (position % 2 == 1)
-        {
-            convertView.setBackgroundColor(Color.parseColor("#cfecff"));
-        }
-        else
-        {
-            convertView.setBackgroundColor(Color.parseColor("#FFE2CF"));
-        }
+
         return convertView;
     }
 

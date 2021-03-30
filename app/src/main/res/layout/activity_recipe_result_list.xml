@@ -22,36 +22,20 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
-            android:layout_weight="0.7"
+            android:layout_weight="0.5"
             android:text="@string/txtRestListTitle"
             android:textSize="30sp"
             android:textStyle="bold|italic" />
 
-        <EditText
-            android:id="@+id/editTextServingSizeTitle"
+        <TextView
+            android:id="@+id/txtViewCheckBoxListResult"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_weight="0.3"
-            android:ems="10"
-            android:hint="@string/editTxtServingSize"
-            android:inputType="textPersonName" />
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.5"
+            android:text="@string/txtNoResult" />
 
     </TableRow>
-
-    <TextView
-        android:id="@+id/txtViewCheckBoxListResult"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/txtNoResult"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/TitleNServeSizeTable" />
 
     <ListView
         android:id="@+id/listViewResultList"
@@ -59,12 +43,11 @@
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtViewCheckBoxListResult" />
+        app:layout_constraintTop_toBottomOf="@+id/TitleNServeSizeTable" />
 </androidx.constraintlayout.widget.ConstraintLayout>
