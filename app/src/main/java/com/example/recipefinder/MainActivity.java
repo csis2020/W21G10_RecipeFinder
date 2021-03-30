@@ -112,11 +112,7 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
         btnSearchIngredients.setOnClickListener((View view) -> {
             String searchIngred = editTxtSearchIngredient.getText().toString();
             if (ingredientsList.contains(searchIngred)) {
-                try {
-                    txtViewIngredsList.append(searchIngred + " ");
-                } catch (Exception e) {
-                    Log.d("CHKBOXERR", "Error checking " + searchIngred);
-                }
+                txtViewIngredsList.append(searchIngred + " ");
                 editTxtSearchIngredient.setText(""); // clear edit text after saving
             } else {
                 Toast.makeText(this, searchIngred + " not found", Toast.LENGTH_SHORT).show();
@@ -132,16 +128,6 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
         btnSearchRecipe.setOnClickListener((View view) -> {
             // create array to store keys for bundle
             ArrayList<String> keys = new ArrayList<>(Arrays.asList());
-//            for (int i = 0; i < gridViewIngredients.getChildCount(); i++) {
-//                CheckBox child = (CheckBox)gridViewIngredients.getChildAt(i);
-//                if (child.isChecked()) {
-//                    //String key = "key" + i;
-//                    String key = ingredientsList.get(i);
-//                    keys.add(key);
-//                    ingredientsBundle.putString(key, ingredientsList.get(i));
-//                }
-//            }
-
             String ingredients = txtViewIngredsList.getText().toString();
             String[] ingredientsList = ingredients.split(" ");
 
