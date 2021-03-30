@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -35,10 +36,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnIngredClick {
 
     // list for ingredients from csv to adapter
-    TextView name,email,id;
+    TextView name,email,id, txtViewIngredsList;
     ImageView imageView;
     Button btnSignOut;
     GoogleSignInClient mGoogleSignInClient;
@@ -99,21 +100,20 @@ public class MainActivity extends AppCompatActivity {
 
         // send ingredients list to grid view adapter to set checkboxes
         GridView gridViewIngredients = findViewById(R.id.gridViewIngredients);
-        IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(ingredientsList);
+        IngredientsAdapter ingredientsAdapter = new IngredientsAdapter(ingredientsList, this);
         gridViewIngredients.setAdapter(ingredientsAdapter);
 
-        // instantiate edit text and button for ingredient search
+        // instantiate views for ingredient search
         EditText editTxtSearchIngredient = findViewById(R.id.editTxtSearchIngredient);
         Button btnSearchIngredients = findViewById(R.id.btnSearchIngredients);
+        txtViewIngredsList = findViewById(R.id.txtViewIngredsList);
 
         // setonclicklistener for search ingredients to check corresponding checkbox
         btnSearchIngredients.setOnClickListener((View view) -> {
             String searchIngred = editTxtSearchIngredient.getText().toString();
             if (ingredientsList.contains(searchIngred)) {
-                int index = ingredientsList.indexOf(searchIngred);
-                CheckBox search = findViewById(index);
                 try {
-                    search.setChecked(true);
+                    txtViewIngredsList.append(searchIngred + " ");
                 } catch (Exception e) {
                     Log.d("CHKBOXERR", "Error checking " + searchIngred);
                 }
@@ -132,16 +132,25 @@ public class MainActivity extends AppCompatActivity {
         btnSearchRecipe.setOnClickListener((View view) -> {
             // create array to store keys for bundle
             ArrayList<String> keys = new ArrayList<>(Arrays.asList());
-            for (int i = 0; i < gridViewIngredients.getChildCount(); i++) {
-                CheckBox child = (CheckBox)gridViewIngredients.getChildAt(i);
-                if (child.isChecked()) {
-                    //String key = "key" + i;
-                    String key = ingredientsList.get(i);
-                    keys.add(key);
-                    ingredientsBundle.putString(key, ingredientsList.get(i));
-                }
+//            for (int i = 0; i < gridViewIngredients.getChildCount(); i++) {
+//                CheckBox child = (CheckBox)gridViewIngredients.getChildAt(i);
+//                if (child.isChecked()) {
+//                    //String key = "key" + i;
+//                    String key = ingredientsList.get(i);
+//                    keys.add(key);
+//                    ingredientsBundle.putString(key, ingredientsList.get(i));
+//                }
+//            }
+
+            String ingredients = txtViewIngredsList.getText().toString();
+            String[] ingredientsList = ingredients.split(" ");
+
+            for (int i = 0; i < ingredientsList.length; i++) {
+                keys.add(ingredientsList[i]);
             }
-//             NEXT INTENT SHOULD BE RECIPELIST.CLASS -- RecipeDisplay used for now
+
+            txtViewIngredsList.setText(""); // clear search ingredients after search
+
             ingredientsBundle.putStringArrayList("KEYS", keys);
             Intent intent = new Intent(this, RecipeResultListActivity.class);
             intent.putExtras(ingredientsBundle);
@@ -269,4 +278,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // override OnIngredClick Interface to add passed item from adapter's on click listener to ingredients textview
+    @Override
+    public void onClick(String text) {
+        txtViewIngredsList = findViewById(R.id.txtViewIngredsList);
+        txtViewIngredsList.append(text + " ");
+    }
 }
