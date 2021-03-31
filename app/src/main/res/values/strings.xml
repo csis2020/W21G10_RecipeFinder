@@ -43,5 +43,5 @@
     <string name="textViewSkip">Skip</string>
     <string name="btnSignOut">SignOut</string>
     <string name="btnSkipLogin">Skip</string>
-    <string name="btnMyFavoriteTxt">My Favourite</string>
+    <string name="btnMyFavoriteTxt">Favourites</string>
 </resources>
