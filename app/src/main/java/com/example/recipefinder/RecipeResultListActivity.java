@@ -1,13 +1,16 @@
 package com.example.recipefinder;
 
+import androidx.annotation.Dimension;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -64,39 +67,6 @@ public class RecipeResultListActivity extends AppCompatActivity {
             }else { // From Checkbox Selection Button
                 Log.d("[HKKO]","__RecipeResultListActivity___CHECKBOX result.");
                 makeDataFromCheckBoxResult(bundle.getStringArrayList("KEYS"));
-                /*
-                ArrayList<String> checkedIngredlist = bundle.getStringArrayList("KEYS");
-
-                String checkedKeys = "";
-                for (int i = 0; i < checkedIngredlist.size(); i++) {
-                    checkedKeys += checkedIngredlist.get(i) + ",";
-                }
-
-                //ArrayList<Integer> checkedlist = generateCheckBoxList();
-                TextView txtViewCheckBoxListResult = findViewById(R.id.txtViewCheckBoxListResult);
-
-                if(checkedIngredlist.size() == 0){
-                    txtViewCheckBoxListResult.setText("There is no matched result with " + checkedKeys);
-                    Toast.makeText(this, "Sorry!! No result found.", Toast.LENGTH_SHORT).show();
-                } else {
-                    //txtViewCheckBoxListResult.setText("");
-
-                    //createRecipeResultList(checkedlist);
-                    int percent = selectRecipeFromTable(checkedIngredlist);
-
-                    String textStr;
-                    if (recipeResultList.size() == 0) {
-                        textStr = "No result which matches over " + percent + "% \nwith " + checkedKeys;
-                    } else {
-                        if (percent == 100)
-                            textStr = "100% matched result with " + checkedKeys;
-                        else
-                            textStr = "Matched result over" + percent + "% \nwith " + checkedKeys;
-                    }
-
-                    txtViewCheckBoxListResult.setText(textStr);
-
-                 */
             }
 
             ListView listViewResultList = findViewById(R.id.listViewResultList);
@@ -302,8 +272,11 @@ public class RecipeResultListActivity extends AppCompatActivity {
         }
 
 
-        String textStr = favoriteUser + " 's Favourite recipes";
+        String textStr = favoriteUser + " 's Favourites";
         TextView txtViewCheckBoxListResult = findViewById(R.id.txtViewCheckBoxListResult);
+        txtViewCheckBoxListResult.setTextColor(Color.rgb(20, 20, 20));
+        txtViewCheckBoxListResult.setTextSize(Dimension.SP, 20);
+        txtViewCheckBoxListResult.setGravity(Gravity.CENTER_VERTICAL|Gravity.RIGHT);
         txtViewCheckBoxListResult.setText(textStr);
     }
 
@@ -337,6 +310,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
                     textStr = "Matched result over" + percent + "% \nwith " + checkedKeys;
             }
 
+            txtViewCheckBoxListResult.setGravity(Gravity.CENTER_VERTICAL|Gravity.RIGHT);
             txtViewCheckBoxListResult.setText(textStr);
         }
     }
