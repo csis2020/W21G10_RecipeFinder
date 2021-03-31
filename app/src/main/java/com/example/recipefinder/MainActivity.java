@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
                 }
 
                 ingredientsBundle.putStringArrayList("KEYS", keys);
+                ingredientsBundle.putString("FAVORITE_USER", null);
                 Intent intent = new Intent(this, RecipeResultListActivity.class);
                 intent.putExtras(ingredientsBundle);
 
@@ -157,6 +160,57 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
                 Toast.makeText(this, "Please select ingredients", Toast.LENGTH_SHORT).show();
             }
         });
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Button btnFavorites = findViewById(R.id.btnFavorites);
+        //This function is to go to my favorite screen
+        btnFavorites.setOnClickListener((View view) -> {
+
+            RecipeFinderDBManager dbManager;
+            String loginUser = "";
+            if (sharedPreferences.contains("LOGIN_SESSION")){
+                loginUser = sharedPreferences.getString("LOGIN_SESSION","");
+                if(loginUser !="") {
+                    Log.d("[HKKO]", "_User("+loginUser+") select <favorite lists> button.");
+
+                    Bundle favoriteBundle = new Bundle();
+                    favoriteBundle.putString("FAVORITE_USER", loginUser);
+                    Intent intent = new Intent(this, RecipeResultListActivity.class);
+                    intent.putExtras(favoriteBundle);
+
+                    startActivity(intent);
+
+                }else{
+                    Log.d("[HKKO]", "This user is unknown.");
+                    Toast.makeText(MainActivity.this, "You need to login to use FAVOURITE service.", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            else{
+                Log.d("[HKKO]", "This user is unknown.");
+                Toast.makeText(MainActivity.this, "You need to login to use FAVOURITE service.", Toast.LENGTH_SHORT).show();
+            }
+            //String ingredients = txtViewIngredsList.getText().toString();
+            /*
+
+            if (ingredients.length() != 0) {// create array to store keys for bundle
+                ArrayList<String> keys = new ArrayList<>(Arrays.asList());
+                String[] ingList = ingredients.split(" ,");
+
+                for (int i = 0; i < ingList.length; i++) {
+                    keys.add(ingList[i]);
+                }
+
+                ingredientsBundle.putStringArrayList("KEYS", keys);
+                Intent intent = new Intent(this, RecipeResultListActivity.class);
+                intent.putExtras(ingredientsBundle);
+
+                startActivity(intent);
+
+
+             */
+            });
+
     }
 
     private boolean checkList(String searchIngred, String ingredsList) {
@@ -216,8 +270,8 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
 
         Log.d("[HKKO]", " _MainActivity_add Recipes into Table.");
         for(int i = 1; i < recipeTitlesList.size() ; i++){
-            result = dbManager.addRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
-                    //result = dbManager.updateRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
+            //result = dbManager.addRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
+                    result = dbManager.updateRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
                     cuisineList.get(i), servingList.get(i), prepTimeList.get(i), cookTimeList.get(i), totalTimeList.get(i));
 
             if(!result){

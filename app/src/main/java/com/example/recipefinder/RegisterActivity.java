@@ -3,8 +3,10 @@ package com.example.recipefinder;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +32,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         // initialize db object
         dbManager = RecipeFinderDBManager.getInstance(this);
+        // For login session managing
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // initialize required views
         editTextUserName = findViewById(R.id.editTextUserName);
@@ -90,6 +94,10 @@ public class RegisterActivity extends AppCompatActivity {
                 // start new activity on successful add to db
                 if (added) {
                     Log.d("DB", "Added " + editTextUserName.getText().toString() + " successfully");
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("LOGIN_SESSION", editTextUserName.getText().toString());
+                    editor.commit();
                     startActivity(new Intent(this, MainActivity.class));
                 }
             }
@@ -104,6 +112,9 @@ public class RegisterActivity extends AppCompatActivity {
         // set on click listener for skip button to redirect to main activity page
         Button button = findViewById(R.id.btnSkipLogin);
         button.setOnClickListener((View view) -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("LOGIN_SESSION", "");
+            editor.commit();
             startActivity(new Intent(RegisterActivity.this, MainActivity.class));
         });
 

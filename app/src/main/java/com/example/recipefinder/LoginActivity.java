@@ -97,6 +97,10 @@ public class LoginActivity extends AppCompatActivity {
                     signedin = true;
                     Log.d("DB", "Successful log in for " + users.get(i)[0]);
                     Toast.makeText(this, "Welcome " + users.get(i)[0], Toast.LENGTH_SHORT).show();
+                    //for session managing
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("LOGIN_SESSION",users.get(i)[0]);
+                    editor.commit();
                     startActivity(new Intent(this, MainActivity.class));
                 }
             }

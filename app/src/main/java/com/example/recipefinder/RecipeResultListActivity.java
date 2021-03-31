@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,72 +56,78 @@ public class RecipeResultListActivity extends AppCompatActivity {
         Log.d("[HKKO]","__RecipeResultListActivity___Start");
         try {
             Bundle bundle = getIntent().getExtras();
-            ArrayList<String> checkedIngredlist = bundle.getStringArrayList("KEYS");
 
-            String checkedKeys = "";
-            for(int i=0; i<checkedIngredlist.size(); i++){
-                checkedKeys += checkedIngredlist.get(i) + ",";
-            }
+            String favoriteUser = bundle.getString("FAVORITE_USER", null);
+            if(favoriteUser != null){ //From MyFavourite button
+                Log.d("[HKKO]","__RecipeResultListActivity___MYFavorite.");
+                makeDataFromLoginInfo(favoriteUser);
+            }else { // From Checkbox Selection Button
+                Log.d("[HKKO]","__RecipeResultListActivity___CHECKBOX result.");
+                makeDataFromCheckBoxResult(bundle.getStringArrayList("KEYS"));
+                /*
+                ArrayList<String> checkedIngredlist = bundle.getStringArrayList("KEYS");
 
-            //readCSVRecipes(); //Temp code
-            //createDB();
-            //createTables();
-
-            RecipeResult recipeResult;
-            //ArrayList<Integer> checkedlist = generateCheckBoxList();
-            TextView txtViewCheckBoxListResult = findViewById(R.id.txtViewCheckBoxListResult);
-
-            if(checkedIngredlist.size() == 0){
-                txtViewCheckBoxListResult.setText("There is no matched result with " + checkedKeys);
-                Toast.makeText(this, "Sorry!! No result found.", Toast.LENGTH_SHORT).show();
-            } else {
-                //txtViewCheckBoxListResult.setText("");
-
-                //createRecipeResultList(checkedlist);
-                int percent = selectRecipeFromTable(checkedIngredlist);
-
-                String textStr;
-                if(recipeResultList.size() == 0) {
-                    textStr = "No result which matches over "+percent+"% \nwith "+checkedKeys;
-                }
-                else{
-                    if(percent == 100)
-                        textStr = "100% matched result with "+checkedKeys;
-                    else
-                        textStr = "Matched result over"+percent+"% \nwith "+checkedKeys;
+                String checkedKeys = "";
+                for (int i = 0; i < checkedIngredlist.size(); i++) {
+                    checkedKeys += checkedIngredlist.get(i) + ",";
                 }
 
-                txtViewCheckBoxListResult.setText(textStr);
+                //ArrayList<Integer> checkedlist = generateCheckBoxList();
+                TextView txtViewCheckBoxListResult = findViewById(R.id.txtViewCheckBoxListResult);
 
-                ListView listViewResultList = findViewById(R.id.listViewResultList);
-                RecipeResultAdapter recipeResultAdapter = new RecipeResultAdapter(recipeResultList);
+                if(checkedIngredlist.size() == 0){
+                    txtViewCheckBoxListResult.setText("There is no matched result with " + checkedKeys);
+                    Toast.makeText(this, "Sorry!! No result found.", Toast.LENGTH_SHORT).show();
+                } else {
+                    //txtViewCheckBoxListResult.setText("");
 
-                listViewResultList.setAdapter(recipeResultAdapter);
+                    //createRecipeResultList(checkedlist);
+                    int percent = selectRecipeFromTable(checkedIngredlist);
 
+                    String textStr;
+                    if (recipeResultList.size() == 0) {
+                        textStr = "No result which matches over " + percent + "% \nwith " + checkedKeys;
+                    } else {
+                        if (percent == 100)
+                            textStr = "100% matched result with " + checkedKeys;
+                        else
+                            textStr = "Matched result over" + percent + "% \nwith " + checkedKeys;
+                    }
 
-                listViewResultList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+                    txtViewCheckBoxListResult.setText(textStr);
 
-                    Bundle selectBundle = new Bundle();
-                    selectBundle.putString("TITLE", recipeResultList.get(position).recipeName);
-                    selectBundle.putInt("IMG", recipeResultList.get(position).recipeImgID);
-                    selectBundle.putString("INGREDS", recipeResultList.get(position).ingredient);
-                    selectBundle.putString("DIRECTIONS", recipeResultList.get(position).direction);
-                    selectBundle.putString("SERVINGSZ", recipeResultList.get(position).servingsz);
-                    selectBundle.putString("PREPTIME", recipeResultList.get(position).preptime);
-                    selectBundle.putString("COOKTIME", recipeResultList.get(position).cooktime);
-                    selectBundle.putString("TOTALTIME", recipeResultList.get(position).totaltime);
-
-                   // Log.d("[HKKO]", "RecipeResultListActivity_ingredient:"+ recipeResultList.get(position).ingredient);
-                  //  Log.d("[HKKO]", "RecipeResultListActivity_direction:"+ recipeResultList.get(position).direction);
-
-                    Intent intent = new Intent(RecipeResultListActivity.this, RecipeDisplay.class);
-                    intent.putExtras(selectBundle);
-
-                    startActivity(intent);
-
-
-                });
+                 */
             }
+
+            ListView listViewResultList = findViewById(R.id.listViewResultList);
+            RecipeResultAdapter recipeResultAdapter = new RecipeResultAdapter(recipeResultList);
+
+            listViewResultList.setAdapter(recipeResultAdapter);
+
+
+            listViewResultList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+
+                Bundle selectBundle = new Bundle();
+                selectBundle.putString("TITLE", recipeResultList.get(position).recipeName);
+                selectBundle.putInt("IMG", recipeResultList.get(position).recipeImgID);
+                selectBundle.putString("INGREDS", recipeResultList.get(position).ingredient);
+                selectBundle.putString("DIRECTIONS", recipeResultList.get(position).direction);
+                selectBundle.putString("SERVINGSZ", recipeResultList.get(position).servingsz);
+                selectBundle.putString("PREPTIME", recipeResultList.get(position).preptime);
+                selectBundle.putString("COOKTIME", recipeResultList.get(position).cooktime);
+                selectBundle.putString("TOTALTIME", recipeResultList.get(position).totaltime);
+
+               // Log.d("[HKKO]", "RecipeResultListActivity_ingredient:"+ recipeResultList.get(position).ingredient);
+              //  Log.d("[HKKO]", "RecipeResultListActivity_direction:"+ recipeResultList.get(position).direction);
+
+                Intent intent = new Intent(RecipeResultListActivity.this, RecipeDisplay.class);
+                intent.putExtras(selectBundle);
+
+                startActivity(intent);
+
+
+            });
+
         }catch(Exception ex){
             Log.d("[HKKO]","__RecipeResultListActivity_onCreate_"+ex);
         }
@@ -246,6 +253,93 @@ public class RecipeResultListActivity extends AppCompatActivity {
         return queries;
     }
 
+    private void makeDataFromLoginInfo(String favoriteUser){
+        dbManager = RecipeFinderDBManager.getInstance(this);
+        SQLiteDatabase db = dbManager.getReadableDatabase();
+
+        String title, ingredients, direction, servingsz, preptime, cooktime, totaltime;
+        int imageId;
+
+
+        String queryStr = "SELECT favorites.username, favorites.title, imgDrawableId, ingredients, directions, serving, prepTime, cookTime, totalTime " +
+                            " FROM favorites INNER JOIN recipes ON favorites.title = recipes.title AND favorites.username = ?";// + favoriteUser+";";
+        Cursor cursor = null;
+        try {
+            //cursor = db.rawQuery(queryStr, null);
+            cursor = db.rawQuery(queryStr, new String[]{favoriteUser});
+
+            Log.d("[HKKO]", "_makeDataFromLoginInfo in_");
+
+
+            if (cursor != null) {
+                cursor.moveToFirst();
+
+                while (!cursor.isAfterLast()) {
+                    Log.d("[HKKO]", "_makeDataFromLoginInfo user:_" + cursor.getString(0));
+                    title = cursor.getString(1); //second column - title;
+                    imageId = cursor.getInt(2); //third column - image drawable id;
+                    ingredients = cursor.getString(3); // 4th column - ingredients;
+                    direction = cursor.getString(4); //5th column - direction
+                    servingsz = cursor.getString(5); // 6th column - serving size;
+                    preptime = cursor.getString(6); // 7th column - prep time;
+                    cooktime = cursor.getString(7); // 8th column - cook time;
+                    totaltime = cursor.getString(8); // 9th column - total time;
+
+                    RecipeResult recipeResult = new RecipeResult(title, imageId, ingredients, direction, servingsz, preptime, cooktime, totaltime);
+                    recipeResultList.add(recipeResult);
+
+                    cursor.moveToNext();
+
+                }
+            }
+        } catch (Exception ex) {
+            Log.d("[HKKO]]", "Querying recipes select error " + ex.getMessage());
+            if(cursor != null)
+                cursor.close();
+        }finally{
+            if(cursor != null)
+                cursor.close();
+        }
+
+
+        String textStr = favoriteUser + " 's Favourite recipes";
+        TextView txtViewCheckBoxListResult = findViewById(R.id.txtViewCheckBoxListResult);
+        txtViewCheckBoxListResult.setText(textStr);
+    }
+
+    private void makeDataFromCheckBoxResult(ArrayList<String > checkedIngredlist){
+        //ArrayList<String> checkedIngredlist = bundle.getStringArrayList("KEYS");
+
+        String checkedKeys = "";
+        for (int i = 0; i < checkedIngredlist.size(); i++) {
+            checkedKeys += checkedIngredlist.get(i) + ",";
+        }
+
+        //ArrayList<Integer> checkedlist = generateCheckBoxList();
+        TextView txtViewCheckBoxListResult = findViewById(R.id.txtViewCheckBoxListResult);
+
+        if(checkedIngredlist.size() == 0){
+            txtViewCheckBoxListResult.setText("There is no matched result with " + checkedKeys);
+            Toast.makeText(this, "Sorry!! No result found.", Toast.LENGTH_SHORT).show();
+        } else {
+            //txtViewCheckBoxListResult.setText("");
+
+            //createRecipeResultList(checkedlist);
+            int percent = selectRecipeFromTable(checkedIngredlist);
+
+            String textStr;
+            if (recipeResultList.size() == 0) {
+                textStr = "No result which matches over " + percent + "% \nwith " + checkedKeys;
+            } else {
+                if (percent == 100)
+                    textStr = "100% matched result with " + checkedKeys;
+                else
+                    textStr = "Matched result over" + percent + "% \nwith " + checkedKeys;
+            }
+
+            txtViewCheckBoxListResult.setText(textStr);
+        }
+    }
         /*
    private void createDB(){
         try{

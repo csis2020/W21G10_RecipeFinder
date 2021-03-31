@@ -6,17 +6,20 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.view.View;
 
 public class RecipeFinderDBManager extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "RecipeFinderDB";
     private static final int DB_VERSION = 1;
 
+    //User Table
     private static final String USERS_TABLE_NAME = "users";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASSWORD = "password";
 
+    //Recipes Table
     private static final String RECIPES_TABLE_NAME = "recipes";
     private static final String COLUMN_TITLE = "title";
     private static final String COLUMN_IMAGE_ID = "imgDrawableId";
@@ -27,6 +30,10 @@ public class RecipeFinderDBManager extends SQLiteOpenHelper {
     private static final String COLUMN_PREP_TIME = "prepTime";
     private static final String COLUMN_COOK_TIME = "cookTime";
     private static final String COLUMN_TOTAL_TIME = "totalTime";
+
+    //Favorite table
+    private static final String FAVORITES_TABLE_NAME = "favorites";
+    //this table has COLUMN_USERNAME, COLUMN_TITLE.
 
     /*
     String dropRecipesTableCmd = "DROP TABLE IF EXISTS " + "recipes;";
@@ -50,6 +57,21 @@ public class RecipeFinderDBManager extends SQLiteOpenHelper {
     private RecipeFinderDBManager(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
 
+        //-----------temp----------------------------------------
+        try {
+            String createFavoritesQuery = "CREATE TABLE " + FAVORITES_TABLE_NAME + "(" + COLUMN_USERNAME + " TEXT," +
+                    COLUMN_TITLE + " TEXT, " +
+                    "PRIMARY KEY (" + COLUMN_USERNAME + "," + COLUMN_TITLE + ")," +
+                    "FOREIGN KEY (" + COLUMN_USERNAME + ") REFERENCES " + USERS_TABLE_NAME + "(" + COLUMN_USERNAME + ")," +
+                    "FOREIGN KEY (" + COLUMN_TITLE + ") REFERENCES " + RECIPES_TABLE_NAME + "(" + COLUMN_TITLE + ")" + " );";
+
+            SQLiteDatabase db = getWritableDatabase();
+
+            db.execSQL(createFavoritesQuery);
+        }catch(Exception ex){
+            Log.d("[HKKO]", "_RecipeFinderDBManager_"+ex.getMessage());
+        }
+        //---------temp----------------------------------------------------
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -73,12 +95,18 @@ public class RecipeFinderDBManager extends SQLiteOpenHelper {
                                                         COLUMN_COOK_TIME + " TEXT, " +
                                                         COLUMN_TOTAL_TIME + " TEXT);";
 
+        String createFavoritesQuery = "CREATE TABLE " + FAVORITES_TABLE_NAME + "(" + COLUMN_USERNAME + " TEXT," +
+                 COLUMN_TITLE + " TEXT, " +
+                "PRIMARY KEY ("+COLUMN_USERNAME +"," + COLUMN_TITLE+")," +
+                "FOREIGN KEY (" + COLUMN_USERNAME + ") REFERENCES " + USERS_TABLE_NAME + "("+COLUMN_USERNAME+")," +
+                "FOREIGN KEY (" +  COLUMN_TITLE + ") REFERENCES " +  RECIPES_TABLE_NAME + "("+COLUMN_TITLE+")"+" );";
         // execute string to create table
 
         //db.execSQL(setPRAGMAForeignKeysOn);
         db.execSQL(createUsersQuery);
 
         db.execSQL(createRecipesQuery);
+        db.execSQL(createFavoritesQuery);
 
     }
 
@@ -87,9 +115,11 @@ public class RecipeFinderDBManager extends SQLiteOpenHelper {
         // drop and create table if exists
         String dropUsersTableCmd = "DROP TABLE IF EXISTS " + USERS_TABLE_NAME + ";";
         String dropRecipesTableCmd = "DROP TABLE IF EXISTS " + RECIPES_TABLE_NAME + ";";
+        String dropFavoriteTableCmd = "DROP TABLE IF EXISTS " + FAVORITES_TABLE_NAME + ";";
 
         db.execSQL(dropUsersTableCmd);
         db.execSQL(dropRecipesTableCmd);
+        db.execSQL(dropFavoriteTableCmd);
         onCreate(db);
     }
 
@@ -151,5 +181,64 @@ public class RecipeFinderDBManager extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + RECIPES_TABLE_NAME, null);
     }
+
+    public boolean addFavorite(String loginUser, String recipeTitle ){
+        Log.d("[HKKO]", "_addFavorite In__");
+
+        long result = 0;
+        boolean isSucceed = false;
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_USERNAME, loginUser);
+        contentValues.put(COLUMN_TITLE, recipeTitle);
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        //return db.insert(FAVORITES_TABLE_NAME, null, contentValues) != -1;
+        try{
+            result = db.insert(FAVORITES_TABLE_NAME, null, contentValues);
+            if(result > 0){
+                Log.d("[HKKO]", "["+loginUser+", "+recipeTitle+"]: " + result + ", inserted in favorites.");
+                isSucceed = true;
+            }else{
+                Log.d("DB DEMO", "Error inserting favorite for ["+loginUser+", "+recipeTitle+"]: ");
+            }
+        }catch(Exception ex) {
+            Log.d("[HKKO]", " Error adding favorites for ["+loginUser+", "+recipeTitle+"]: "+ ex.getMessage());
+        }
+
+        return isSucceed;
+    }
+
+    public void removeFavorite(String loginUser, String recipeTitle ){
+        Log.d("[HKKO]", "_removeFavorite In__");
+
+        long result = 0;
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        String conditionStr = COLUMN_USERNAME + "= ? AND " + COLUMN_TITLE + "= ?";
+        String[] args = new String[]{loginUser, recipeTitle};
+
+        try{
+            result = db.delete(FAVORITES_TABLE_NAME, conditionStr, args);
+            if(result > 1){
+                Log.d("[HKKO]", "["+loginUser+", "+recipeTitle+"]: " + result + " : multiple favorites data are deleted. ");
+
+            }else if(result == 1){
+                Log.d("[HKKO]", "["+loginUser+", "+recipeTitle+"]: " + result + " : one favorites data is deleted. ");
+            }else{
+                Log.d("[HKKO]", "["+loginUser+", "+recipeTitle+"]: " + result + " : no record for deletion. ");
+            }
+        }catch(Exception ex) {
+            Log.d("[HKKO]", " Error deleting favorites for ["+loginUser+", "+recipeTitle+"]: "+ ex.getMessage());
+        }
+
+    }
+
+    public Cursor getAllFavorites(){
+        SQLiteDatabase db = getReadableDatabase();
+        return db.rawQuery("SELECT * FROM " + FAVORITES_TABLE_NAME, null);
+    }
+
 
 }
