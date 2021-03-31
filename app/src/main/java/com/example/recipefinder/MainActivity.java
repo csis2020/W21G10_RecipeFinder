@@ -191,25 +191,7 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
                 Toast.makeText(MainActivity.this, "You need to login to use FAVOURITE service.", Toast.LENGTH_SHORT).show();
             }
             //String ingredients = txtViewIngredsList.getText().toString();
-            /*
-
-            if (ingredients.length() != 0) {// create array to store keys for bundle
-                ArrayList<String> keys = new ArrayList<>(Arrays.asList());
-                String[] ingList = ingredients.split(" ,");
-
-                for (int i = 0; i < ingList.length; i++) {
-                    keys.add(ingList[i]);
-                }
-
-                ingredientsBundle.putStringArrayList("KEYS", keys);
-                Intent intent = new Intent(this, RecipeResultListActivity.class);
-                intent.putExtras(ingredientsBundle);
-
-                startActivity(intent);
-
-
-             */
-            });
+        });
 
     }
 
@@ -351,7 +333,10 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
         if (check){
             txtViewIngredsList.append(text + ", ");
         } else {
-            Toast.makeText(this, text + " has already been added to ingredients list", Toast.LENGTH_SHORT).show();
+            String tempStr = txtViewIngredsList.getText().toString();
+            txtViewIngredsList.setText(tempStr.replaceAll(text+", ", ""));
+            Log.d("[RECIPEFINDER_LOG]", "unchecked "+ text);
+            //Toast.makeText(this, text + " has already been added to ingredients list", Toast.LENGTH_SHORT).show();
         }
     }
 }
