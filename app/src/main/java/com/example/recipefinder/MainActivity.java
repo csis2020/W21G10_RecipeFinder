@@ -90,8 +90,6 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
             Glide.with(this).load(String.valueOf(personPhoto)).into(imageView);
         }
 
-
-
         //Insert Recipes' data to the recipes table in DB.
         addRecipesToDB();
 
@@ -133,19 +131,28 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
 
             if (ingredients.length() != 0) {// create array to store keys for bundle
                 ArrayList<String> keys = new ArrayList<>(Arrays.asList());
-                String[] ingredientsList = ingredients.split(" ,");
+                String[] ingList = ingredients.split(" ,");
 
-                for (int i = 0; i < ingredientsList.length; i++) {
-                    keys.add(ingredientsList[i]);
+                for (int i = 0; i < ingList.length; i++) {
+                    keys.add(ingList[i]);
                 }
-
-                txtViewIngredsList.setText(""); // clear search ingredients after search
 
                 ingredientsBundle.putStringArrayList("KEYS", keys);
                 Intent intent = new Intent(this, RecipeResultListActivity.class);
                 intent.putExtras(ingredientsBundle);
 
                 startActivity(intent);
+
+                // reset checkboxes
+                for (int i = 0; i < gridViewIngredients.getChildCount(); i++) {
+                    CheckBox child = (CheckBox) gridViewIngredients.getChildAt(i);
+                    if (child.isChecked()) {
+                        child.setChecked(false);
+                    }
+                }
+
+                // reset search ingredients textview
+                txtViewIngredsList.setText("");
             } else {
                 Toast.makeText(this, "Please select ingredients", Toast.LENGTH_SHORT).show();
             }
