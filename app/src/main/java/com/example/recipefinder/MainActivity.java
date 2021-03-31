@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
 
             if (ingredients.length() != 0) {// create array to store keys for bundle
                 ArrayList<String> keys = new ArrayList<>(Arrays.asList());
-                String[] ingList = ingredients.split(" ,");
+                String[] ingList = ingredients.split(", ");
 
                 for (int i = 0; i < ingList.length; i++) {
                     keys.add(ingList[i]);
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
     }
 
     private boolean checkList(String searchIngred, String ingredsList) {
-        String[] ingrds = ingredsList.split(" ,");
+        String[] ingrds = ingredsList.split(", ");
         List<String> ingreds = Arrays.asList(ingrds);
         if (!ingreds.contains(searchIngred)) {
             return true;
@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
         txtViewIngredsList = findViewById(R.id.txtViewIngredsList);
         boolean check = checkList(text, txtViewIngredsList.getText().toString());
         if (check){
-            txtViewIngredsList.append(text + " ,");
+            txtViewIngredsList.append(text + ", ");
         } else {
             Toast.makeText(this, text + " has already been added to ingredients list", Toast.LENGTH_SHORT).show();
         }
