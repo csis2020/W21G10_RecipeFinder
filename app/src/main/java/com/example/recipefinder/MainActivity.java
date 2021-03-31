@@ -112,10 +112,13 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
         btnSearchIngredients.setOnClickListener((View view) -> {
             String searchIngred = editTxtSearchIngredient.getText().toString();
             if (ingredientsList.contains(searchIngred)) {
-                txtViewIngredsList.append(searchIngred + " ");
-                editTxtSearchIngredient.setText(""); // clear edit text after saving
-            } else {
-                Toast.makeText(this, searchIngred + " not found", Toast.LENGTH_SHORT).show();
+                boolean check = checkList(searchIngred, txtViewIngredsList.getText().toString());
+                if (check) {
+                    txtViewIngredsList.append(searchIngred + " ,");
+                    editTxtSearchIngredient.setText(""); // clear edit text after saving
+                } else {
+                    Toast.makeText(this, searchIngred + " not found", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -126,24 +129,39 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
 
         // setonclicklistener for search recipe to collect checked ingredients, put into bundle and pass to next intent
         btnSearchRecipe.setOnClickListener((View view) -> {
-            // create array to store keys for bundle
-            ArrayList<String> keys = new ArrayList<>(Arrays.asList());
             String ingredients = txtViewIngredsList.getText().toString();
-            String[] ingredientsList = ingredients.split(" ");
 
-            for (int i = 0; i < ingredientsList.length; i++) {
-                keys.add(ingredientsList[i]);
+            if (ingredients.length() != 0) {// create array to store keys for bundle
+                ArrayList<String> keys = new ArrayList<>(Arrays.asList());
+                String[] ingredientsList = ingredients.split(" ,");
+
+                for (int i = 0; i < ingredientsList.length; i++) {
+                    keys.add(ingredientsList[i]);
+                }
+
+                txtViewIngredsList.setText(""); // clear search ingredients after search
+
+                ingredientsBundle.putStringArrayList("KEYS", keys);
+                Intent intent = new Intent(this, RecipeResultListActivity.class);
+                intent.putExtras(ingredientsBundle);
+
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Please select ingredients", Toast.LENGTH_SHORT).show();
             }
-
-            txtViewIngredsList.setText(""); // clear search ingredients after search
-
-            ingredientsBundle.putStringArrayList("KEYS", keys);
-            Intent intent = new Intent(this, RecipeResultListActivity.class);
-            intent.putExtras(ingredientsBundle);
-
-            startActivity(intent);
         });
     }
+
+    private boolean checkList(String searchIngred, String ingredsList) {
+        String[] ingrds = ingredsList.split(" ,");
+        List<String> ingreds = Arrays.asList(ingrds);
+        if (!ingreds.contains(searchIngred)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -268,6 +286,11 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
     @Override
     public void onClick(String text) {
         txtViewIngredsList = findViewById(R.id.txtViewIngredsList);
-        txtViewIngredsList.append(text + " ");
+        boolean check = checkList(text, txtViewIngredsList.getText().toString());
+        if (check){
+            txtViewIngredsList.append(text + " ,");
+        } else {
+            Toast.makeText(this, text + " has already been added to ingredients list", Toast.LENGTH_SHORT).show();
+        }
     }
 }
