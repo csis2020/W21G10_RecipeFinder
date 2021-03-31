@@ -41,6 +41,7 @@ public class RecipeDisplay extends AppCompatActivity {
         TextView txtViewRecipeInfo = findViewById(R.id.txtViewRecipeInfo);
 
         ImageView imgViewFavorite = findViewById(R.id.imgViewFavorite);
+
         String loginUser = "";
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPreferences.contains("LOGIN_SESSION")){
