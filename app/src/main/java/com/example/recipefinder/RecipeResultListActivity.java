@@ -287,7 +287,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
         String keyStr;
         ArrayList<String> checkedIngredlist = new ArrayList<>();
 
-        //IngredKeysList = new ArrayList<>(Arrays.asList("Amsterdam", "", "Paris", ""));
+        reOrderIngredients(IngredKeysList);
 
         for (int i = 0; i < IngredKeysList.size(); i++) {
             keyStr = IngredKeysList.get(i);
@@ -322,6 +322,31 @@ public class RecipeResultListActivity extends AppCompatActivity {
             txtViewCheckBoxListResult.setGravity(Gravity.CENTER_VERTICAL|Gravity.RIGHT);
             txtViewCheckBoxListResult.setText(textStr);
         }
+    }
+
+    private void reOrderIngredients(ArrayList<String > ingredientsArray){
+
+        int i, j;
+        String tempStr, resultStr;
+
+        resultStr = "";
+        for (i = 0; i < ingredientsArray.size(); i++) {
+
+           for(j = (i+1); j < ingredientsArray.size(); j++){
+
+                if(ingredientsArray.get(i).compareToIgnoreCase(ingredientsArray.get(j)) > 0){
+
+                   // Log.d("[HKKO]", "["+i+"]:"+ingredientsArray.get(i)+" ["+j+"]:" + ingredientsArray.get(j));
+                    tempStr =  ingredientsArray.get(i);
+                    ingredientsArray.set(i,ingredientsArray.get(j));
+                    ingredientsArray.set(j, tempStr);
+                }
+            }
+            resultStr += ingredientsArray.get(i) + ", ";
+        }
+
+        Log.d("[HKKO]", "_reOrder_:"+ resultStr);
+
     }
         /*
    private void createDB(){
