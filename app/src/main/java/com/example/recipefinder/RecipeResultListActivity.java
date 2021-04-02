@@ -316,7 +316,7 @@ public class RecipeResultListActivity extends AppCompatActivity {
                 if (percent == 100)
                     textStr = "100% matched result with " + checkedKeys;
                 else
-                    textStr = "Matched result over" + percent + "% \nwith " + checkedKeys;
+                    textStr = "Matched result over " + percent + "% \nwith " + checkedKeys;
             }
 
             txtViewCheckBoxListResult.setGravity(Gravity.CENTER_VERTICAL|Gravity.RIGHT);
