@@ -58,6 +58,7 @@ public class RecipeFinderDBManager extends SQLiteOpenHelper {
         super(context, DB_NAME, null, DB_VERSION);
 
         //-----------temp----------------------------------------
+        /*
         try {
             String createFavoritesQuery = "CREATE TABLE " + FAVORITES_TABLE_NAME + "(" + COLUMN_USERNAME + " TEXT," +
                     COLUMN_TITLE + " TEXT, " +
@@ -71,6 +72,7 @@ public class RecipeFinderDBManager extends SQLiteOpenHelper {
         }catch(Exception ex){
             Log.d("[HKKO]", "_RecipeFinderDBManager_"+ex.getMessage());
         }
+        */
         //---------temp----------------------------------------------------
     }
     @Override
