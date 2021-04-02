@@ -280,24 +280,33 @@ public class RecipeResultListActivity extends AppCompatActivity {
         txtViewCheckBoxListResult.setText(textStr);
     }
 
-    private void makeDataFromCheckBoxResult(ArrayList<String > checkedIngredlist){
+    private void makeDataFromCheckBoxResult(ArrayList<String > IngredKeysList){
         //ArrayList<String> checkedIngredlist = bundle.getStringArrayList("KEYS");
 
         String checkedKeys = "";
-        for (int i = 0; i < checkedIngredlist.size(); i++) {
-            checkedKeys += checkedIngredlist.get(i) + ",";
+        String keyStr;
+        ArrayList<String> checkedIngredlist = new ArrayList<>();
+
+        //IngredKeysList = new ArrayList<>(Arrays.asList("Amsterdam", "", "Paris", ""));
+
+        for (int i = 0; i < IngredKeysList.size(); i++) {
+            keyStr = IngredKeysList.get(i);
+            if(keyStr != "") {
+                checkedKeys += keyStr;
+                if(i != (IngredKeysList.size()-1) )
+                    checkedKeys += ",";
+
+                checkedIngredlist.add(keyStr);
+            }
         }
 
-        //ArrayList<Integer> checkedlist = generateCheckBoxList();
         TextView txtViewCheckBoxListResult = findViewById(R.id.txtViewCheckBoxListResult);
 
         if(checkedIngredlist.size() == 0){
             txtViewCheckBoxListResult.setText("There is no matched result with " + checkedKeys);
             Toast.makeText(this, "Sorry!! No result found.", Toast.LENGTH_SHORT).show();
         } else {
-            //txtViewCheckBoxListResult.setText("");
 
-            //createRecipeResultList(checkedlist);
             int percent = selectRecipeFromTable(checkedIngredlist);
 
             String textStr;

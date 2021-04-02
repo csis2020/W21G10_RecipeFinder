@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
             if (ingredientsList.contains(searchIngred)) {
                 boolean check = checkList(searchIngred, txtViewIngredsList.getText().toString());
                 if (check) {
-                    txtViewIngredsList.append(searchIngred + " ,");
+                    txtViewIngredsList.append(searchIngred + ", ");
                     editTxtSearchIngredient.setText(""); // clear edit text after saving
                 } else {
                     Toast.makeText(this, searchIngred + " not found", Toast.LENGTH_SHORT).show();
