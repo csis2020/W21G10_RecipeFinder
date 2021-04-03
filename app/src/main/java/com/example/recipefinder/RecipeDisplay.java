@@ -2,6 +2,7 @@ package com.example.recipefinder;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,6 +11,8 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -24,7 +27,11 @@ public class RecipeDisplay extends AppCompatActivity {
 
     RecipeFinderDBManager dbManager;
     SharedPreferences sharedPreferences;
-    String title ="";
+    String title = "";
+    String ingredients = "";
+    String directions = "";
+    EditText editTxtMsg;
+    Button btnShare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +59,13 @@ public class RecipeDisplay extends AppCompatActivity {
             Log.d("[HKKO]", "_there is no user prefernce.");
 
 
-
         try {
             // declare bundle from intent and get information from bundle
             Bundle bundle = getIntent().getExtras();
             title = bundle.getString("TITLE");
             int imgId = bundle.getInt("IMG");
-            String ingredients = bundle.getString("INGREDS");
-            String directions = bundle.getString("DIRECTIONS");
+            ingredients = bundle.getString("INGREDS");
+            directions = bundle.getString("DIRECTIONS");
             String servingsz = bundle.getString("SERVINGSZ");
             String preptime = bundle.getString("PREPTIME");
             String cooktime = bundle.getString("COOKTIME");
@@ -130,8 +136,29 @@ public class RecipeDisplay extends AppCompatActivity {
                 }
             }
         });
+
+        // share recipe function
+        btnShare = findViewById(R.id.btnShare);
+        editTxtMsg = findViewById(R.id.editTxtMsg);
+        editTxtMsg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareText(editTxtMsg.getText().toString(), title, ingredients, directions);
+            }
+        });
     }
 
+    // share recipe function
+    private void shareText(String words, String title, String ingredients, String directions) {
+        String messageBody = words + "\n" + title + "\n" + ingredients + "\n" + directions;
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Subject: ");
+        intent.putExtra(Intent.EXTRA_TEXT,messageBody);
+        startActivity(Intent.createChooser(intent, "Share via"));
+    }
+
+    // convert ingredients from csv to presentable string
     public String convertIngredList(String str) {
         String output = "";
 
@@ -152,6 +179,7 @@ public class RecipeDisplay extends AppCompatActivity {
         return output;
     }
 
+    // convert directions from csv to presentable string
     private String convertDirList(String dir) {
         String output = "";
 

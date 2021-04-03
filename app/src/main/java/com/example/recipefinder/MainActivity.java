@@ -1,34 +1,20 @@
 package com.example.recipefinder;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,11 +26,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnIngredClick {
 
-    // list for ingredients from csv to adapter
-    TextView name,email,id, txtViewIngredsList;
-    ImageView imageView;
-    Button btnSignOut;
-    GoogleSignInClient mGoogleSignInClient;
+    TextView txtViewIngredsList;
 
     List<String> ingredientsList = new ArrayList<>(Arrays.asList());
     //For recipes.csv -------------------------------------------------------
@@ -63,34 +45,6 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        btnSignOut = findViewById(R.id.btnSignOut);
-        btnSignOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signOut();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            }
-        });
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
-        if (acct != null) {
-            String personName = acct.getDisplayName();
-            String personEmail = acct.getEmail();
-            String personId = acct.getId();
-            Uri personPhoto = acct.getPhotoUrl();
-
-            name.setText(personName);
-            email.setText(personEmail);
-            id.setText(personId);
-            Glide.with(this).load(String.valueOf(personPhoto)).into(imageView);
-        }
 
         //Insert Recipes' data to the recipes table in DB.
         addRecipesToDB();
@@ -190,7 +144,6 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
                 Log.d("[HKKO]", "This user is unknown.");
                 Toast.makeText(MainActivity.this, "You need to login to use FAVOURITE service.", Toast.LENGTH_SHORT).show();
             }
-            //String ingredients = txtViewIngredsList.getText().toString();
         });
 
     }
@@ -205,16 +158,6 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
         }
     }
 
-    private void signOut() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(MainActivity.this, "Signed out succesfully", Toast.LENGTH_LONG).show();
-
-                    }
-                });
-    }
     // method to read ingredients csv
     private List<String> ReadIngredients() {
 

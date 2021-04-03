@@ -44,4 +44,6 @@
     <string name="btnSignOut">SignOut</string>
     <string name="btnSkipLogin">Skip</string>
     <string name="btnMyFavoriteTxt">Favourites</string>
+    <string name="EditTxtMsg">Enter Message</string>
+    <string name="btnShare">Share Recipe</string>
 </resources>
