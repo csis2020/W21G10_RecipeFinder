@@ -1,7 +1,5 @@
 package com.example.recipefinder;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -14,14 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class RecipeDisplay extends AppCompatActivity {
 
@@ -150,7 +144,9 @@ public class RecipeDisplay extends AppCompatActivity {
 
     // share recipe function
     private void shareText(String words, String title, String ingredients, String directions) {
-        String messageBody = words + "\n" + title + "\n" + ingredients + "\n" + directions;
+        String fmtIngred = convertIngredList(ingredients);
+        String fmtDir = convertDirList(directions);
+        String messageBody = words + "\n\n" + title + "\n" + fmtIngred + "\n" + fmtDir;
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, "Subject: ");
