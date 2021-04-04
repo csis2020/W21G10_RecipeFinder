@@ -1,7 +1,5 @@
 package com.example.recipefinder;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,9 +10,10 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -226,14 +225,6 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
             int imgID;
             while((csvLine = reader.readLine()) != null){
                 String[] fieldArray = csvLine.split(",");
-                //fieldArray[0] : String,  Title
-                //fieldArray[1] : String,  image
-                //fieldArray[2] : String,  Ingredients
-                //fieldArray[3] : String,  Directions
-                //fieldArray[4] : String,  Cuisine
-                //fieldArray[5] : int, Serving
-                //fieldArray[6] : int, cook time
-                //fieldArray[7] : int,  total time
 
                 recipeTitlesList.add(fieldArray[0]);
                 imgDrawableName = fieldArray[1].toLowerCase();
@@ -246,12 +237,6 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
                 prepTimeList.add(fieldArray[6]);
                 cookTimeList.add(fieldArray[7]);
                 totalTimeList.add(fieldArray[8]);
-
-                //Log.d("[HKKO]", "["+i+"][0]: "+ fieldArray[0] + ", ["+i+"][1]: "+ fieldArray[1]);
-                //Log.d("[HKKO]", "["+i+"][2]: "+ fieldArray[2]);
-                //Log.d("[HKKO]", "["+i+"][3]: "+ fieldArray[3]);
-                //Log.d("[HKKO]", "["+i+"][4]: "+ fieldArray[4] + ", ["+i+"][5]:" +fieldArray[5]+
-                //                            ", ["+i+"][6]:" +fieldArray[6]+", ["+i+"][7]:" +fieldArray[7]+", ["+i+"][8]:" +fieldArray[8] );
 
                 i++;
             }
