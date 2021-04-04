@@ -194,8 +194,8 @@ public class MainActivity extends AppCompatActivity implements OnIngredClick {
 
         Log.d("[HKKO]", " _MainActivity_add Recipes into Table.");
         for(int i = 1; i < recipeTitlesList.size() ; i++){
-            result = dbManager.addRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
-            //        result = dbManager.updateRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
+            //result = dbManager.addRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
+                    result = dbManager.updateRecipe(recipeTitlesList.get(i), recipeImagesList.get(i), recipeIngredientsList.get(i), recipeDirectionsList.get(i),
                     cuisineList.get(i), servingList.get(i), prepTimeList.get(i), cookTimeList.get(i), totalTimeList.get(i));
 
             if(!result){
