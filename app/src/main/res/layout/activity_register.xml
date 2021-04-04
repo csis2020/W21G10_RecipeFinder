@@ -8,24 +8,10 @@
     tools:context=".RegisterActivity">
 
     <TextView
-        android:id="@+id/textViewLogo"
-        android:layout_width="242dp"
-        android:layout_height="53dp"
-        android:text="@string/textViewLogo"
-        android:textColor="@color/white"
-        android:textColorHighlight="@color/material_on_primary_emphasis_high_type"
-        android:textSize="36sp"
-        android:textStyle="bold|italic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/textViewreg"
         android:layout_width="139dp"
         android:layout_height="57dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="@string/textViewreg"
         android:textColor="@color/white"
         android:textSize="36sp"
@@ -33,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLogo" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/editTextUserName"
@@ -126,7 +112,7 @@
     <Button
         android:id="@+id/btnRegister"
         android:layout_width="201dp"
-        android:layout_height="56dp"
+        android:layout_height="45dp"
         android:layout_marginTop="36dp"
         android:background="@drawable/btn_bg"
         android:text="@string/btnRegister"
@@ -174,13 +160,13 @@
     <Button
         android:id="@+id/btnSkipLogin"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="108dp"
         android:layout_marginBottom="88dp"
         android:background="@drawable/btn_bg"
         android:text="@string/btnSkipLogin"
         android:textColor="@color/blue_200"
-        android:textSize="36sp"
+        android:textSize="24sp"
         app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
